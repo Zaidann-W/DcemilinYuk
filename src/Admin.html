@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Panel - DcemilinYuk</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ===== ADMIN SPECIFIC STYLES ===== */
+    body { background: var(--bg); }
+
+    /* LOGIN SCREEN */
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-secondary) 100%);
+    }
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 3rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-xl);
+      text-align: center;
+    }
+    .login-logo {
+      font-family: var(--font-heading);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .login-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+    .login-card .form-input {
+      text-align: center;
+      letter-spacing: 2px;
+      font-size: 1.1rem;
+    }
+
+    /* ADMIN PANEL LAYOUT */
+    #admin-panel {
+      display: none;
+      padding-top: 2rem;
+      padding-bottom: 4rem;
+      min-height: 100vh;
+    }
+    .admin-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .admin-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .admin-brand {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+    .admin-brand span {
+      font-size: 0.8rem;
+      background: var(--primary);
+      color: white;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      margin-left: 8px;
+      font-weight: 600;
+    }
+    .admin-header-actions { display: flex; gap: 0.75rem; align-items: center; }
+
+    /* STATS */
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .admin-stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .admin-stat-card .stat-num {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .admin-stat-card .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* TABS */
+    .admin-tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .admin-tab {
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: var(--transition-fast);
+      font-family: var(--font-body);
+    }
+    .admin-tab:hover { color: var(--primary); }
+    .admin-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .admin-tab-content { display: none; }
+    .admin-tab-content.active { display: block; }
+
+    /* PRODUCT GRID */
+    .admin-products-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .admin-products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+    .admin-product-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      gap: 0;
+      flex-direction: column;
+      transition: var(--transition);
+    }
+    .admin-product-card:hover { box-shadow: var(--shadow-md); }
+    .admin-product-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      background: var(--bg-secondary);
+    }
+    .admin-product-info { padding: 1rem; flex: 1; }
+    .admin-product-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      gap: 0.5rem;
+    }
+    .admin-product-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+    .admin-product-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
+    .admin-product-desc {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .admin-product-price { font-weight: 700; color: var(--primary); font-size: 1rem; }
+
+    /* ADMIN BUTTONS */
+    .admin-btn {
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition-fast);
+      font-family: var(--font-body);
+    }
+    .admin-btn-edit { background: var(--primary-light); color: var(--primary); }
+    .admin-btn-edit:hover { background: var(--primary); color: white; }
+    .admin-btn-delete { background: #FEE2E2; color: #DC2626; }
+    .admin-btn-delete:hover { background: #DC2626; color: white; }
+
+    /* TAGS */
+    .admin-cat-tag {
+      display: inline-block;
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      margin-right: 4px;
+    }
+    .admin-badge-tag {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+    }
+
+    /* MODAL */
+    .admin-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .admin-modal-box {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-xl);
+    }
+    .admin-modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      z-index: 1;
+    }
+    .admin-modal-header h3 { margin: 0; }
+    .admin-modal-close {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: var(--bg-secondary);
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: var(--transition-fast);
+    }
+    .admin-modal-close:hover { background: #FEE2E2; color: #DC2626; }
+    .admin-modal-body { padding: 1.5rem; }
+
+    /* IMAGE PREVIEW */
+    #image-preview {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      margin-top: 0.5rem;
+      display: none;
+      border: 1px solid var(--border);
+    }
+
+    /* CATEGORIES */
+    .admin-cat-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+    }
+    .cat-icon { font-size: 1.5rem; width: 36px; text-align: center; }
+    .cat-details { flex: 1; }
+    .cat-details strong { display: block; font-size: 0.95rem; }
+    .cat-id { font-size: 0.8rem; color: var(--text-muted); }
+
+    .admin-empty {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .admin-section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .admin-section-card h4 { margin-bottom: 1rem; }
+
+    .form-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .admin-search { max-width: 280px; }
+
+    @media (max-width: 600px) {
+      .admin-products-grid { grid-template-columns: 1fr; }
+      .login-card { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen">
+    <div class="login-card">
+      <div class="login-logo">DcemilinYuk</div>
+      <p class="login-subtitle">Halaman Admin — Masukkan password untuk lanjut</p>
+      <form id="login-form">
+        <div class="form-group">
+          <input type="password" id="admin-password" class="form-input" placeholder="Password admin" autocomplete="current-password" required autofocus>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:0.5rem;">Masuk</button>
+      </form>
+      <p style="margin-top:1.5rem;font-size:0.8rem;color:var(--text-muted);">
+        Halaman ini hanya untuk pengelola toko.
+      </p>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="admin-panel">
+    <div class="admin-header">
+      <div class="admin-header-inner">
+        <div class="admin-brand">
+          DcemilinYuk <span>Admin</span>
+        </div>
+        <div class="admin-header-actions">
+          <a href="index.html" class="btn btn-outline btn-sm" target="_blank">Lihat Web</a>
+          <button class="btn btn-sm" style="background:var(--bg-secondary);color:var(--text);" onclick="toggleTheme()" title="Ganti tema">
+            <span id="theme-icon">🌙</span>
+          </button>
+          <button class="btn btn-sm" style="background:#FEE2E2;color:#DC2626;" onclick="adminLogout()">Keluar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <!-- STATS -->
+      <div class="admin-stats">
+        <div class="admin-stat-card">
+          <div class="stat-num" id="stat-products">0</div>
+          <div class="stat-label">Total Produk</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-num" id="stat-categories">0</div>
+          <div class="stat-label">Kategori</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="stat-num">WA</div>
+          <div class="stat-label">Sistem Pemesanan</div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchTab('products')">Produk</button>
+        <button class="admin-tab" onclick="switchTab('categories')">Kategori</button>
+        <button class="admin-tab" onclick="switchTab('settings')">Pengaturan</button>
+      </div>
+
+      <!-- TAB: PRODUCTS -->
+      <div class="admin-tab-content active" id="tab-products">
+        <div class="admin-products-header">
+          <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+            <h3 style="margin:0;">Daftar Produk</h3>
+            <input type="text" id="admin-search" class="form-input admin-search" placeholder="Cari produk..." oninput="filterAdminProducts()">
+          </div>
+          <button class="btn btn-primary" onclick="openAddModal()">+ Tambah Produk</button>
+        </div>
+        <div class="admin-products-grid" id="admin-products-grid"></div>
+      </div>
+
+      <!-- TAB: CATEGORIES -->
+      <div class="admin-tab-content" id="tab-categories">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;" class="admin-cat-layout">
+
+          <div class="admin-section-card">
+            <h4>Kategori Saat Ini</h4>
+            <div id="admin-categories-list"></div>
+          </div>
+
+          <div class="admin-section-card">
+            <h4>Tambah Kategori Baru</h4>
+            <form id="cat-form">
+              <div class="form-group">
+                <label class="form-label">Nama Kategori *</label>
+                <input type="text" id="cat-name" class="form-input" placeholder="cth: Minuman Hangat" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Icon (emoji)</label>
+                <input type="text" id="cat-icon" class="form-input" placeholder="cth: ☕" maxlength="4">
+                <p class="form-hint">Copy-paste emoji dari keyboard</p>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Deskripsi singkat</label>
+                <input type="text" id="cat-desc" class="form-input" placeholder="cth: Hangat & Nyaman">
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Tambah Kategori</button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB: SETTINGS -->
+      <div class="admin-tab-content" id="tab-settings">
+        <div class="admin-section-card">
+          <h4>Reset Data</h4>
+          <p style="color:var(--text-secondary);margin-bottom:1rem;font-size:0.9rem;">
+            Kembalikan semua produk dan kategori ke data default bawaan sistem. Produk yang sudah ditambahkan manual akan hilang.
+          </p>
+          <button class="btn btn-danger" onclick="resetToDefault()">Reset ke Default</button>
+        </div>
+        <div class="admin-section-card">
+          <h4>Panduan Penggunaan</h4>
+          <ul style="color:var(--text-secondary);font-size:0.9rem;line-height:2;padding-left:1.25rem;">
+            <li>Pergi ke tab <strong>Produk</strong> untuk tambah, edit, atau hapus produk</li>
+            <li>Pergi ke tab <strong>Kategori</strong> untuk membuat kategori baru</li>
+            <li>Untuk foto produk, upload dulu ke <a href="https://imgbb.com" target="_blank">imgbb.com</a> (gratis), lalu copy-paste link fotonya</li>
+            <li>Semua perubahan langsung tampil di website pengunjung</li>
+            <li>Untuk akses admin lagi, buka <strong>/Admin.html</strong> di browser</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PRODUCT MODAL -->
+  <div class="admin-modal" id="product-modal">
+    <div class="admin-modal-box">
+      <div class="admin-modal-header">
+        <h3 id="modal-title">Tambah Produk Baru</h3>
+        <button class="admin-modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="admin-modal-body">
+        <form id="product-form">
+          <input type="hidden" id="edit-product-id">
+
+          <div class="form-group">
+            <label class="form-label">Nama Produk *</label>
+            <input type="text" id="edit-product-name" class="form-input" placeholder="cth: Es Teh Manis" required>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label class="form-label">Kategori *</label>
+              <select id="edit-product-category" class="form-input" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Harga (Rp) *</label>
+              <input type="number" id="edit-product-price" class="form-input" placeholder="5000" min="0" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Deskripsi Produk</label>
+            <textarea id="edit-product-desc" class="form-input" placeholder="Ceritakan produkmu..." style="min-height:80px;"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">URL Foto Produk</label>
+            <input type="url" id="edit-product-image" class="form-input" placeholder="https://i.ibb.co/xxx/foto.jpg" oninput="previewImage('edit-product-image','image-preview')">
+            <p class="form-hint">Upload foto ke <a href="https://imgbb.com" target="_blank">imgbb.com</a> lalu paste link-nya di sini</p>
+            <img id="image-preview" alt="Preview foto">
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;">
+            <div class="form-group">
+              <label class="form-label">Badge</label>
+              <select id="edit-product-badge" class="form-input">
+                <option value="">Tidak ada</option>
+                <option value="Populer">Populer</option>
+                <option value="Best Seller">Best Seller</option>
+                <option value="Baru">Baru</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Rating (1-5)</label>
+              <input type="number" id="edit-product-rating" class="form-input" placeholder="4.5" min="1" max="5" step="0.1" value="4.5">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Terjual</label>
+              <input type="number" id="edit-product-sold" class="form-input" placeholder="0" min="0" value="0">
+            </div>
+          </div>
+
+          <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+            <button type="submit" class="btn btn-primary" style="flex:1;">Simpan Produk</button>
+            <button type="button" class="btn btn-outline" onclick="closeModal()">Batal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.admin-tab').forEach((t, i) => {
+        const tabs = ['products', 'categories', 'settings'];
+        t.classList.toggle('active', tabs[i] === tab);
+      });
+      document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    // Responsive cat layout
+    function adjustCatLayout() {
+      const layout = document.querySelector('.admin-cat-layout');
+      if (!layout) return;
+      if (window.innerWidth < 768) {
+        layout.style.gridTemplateColumns = '1fr';
+      } else {
+        layout.style.gridTemplateColumns = '1fr 1fr';
+      }
+    }
+    window.addEventListener('resize', adjustCatLayout);
+    adjustCatLayout();
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Katalog produk DcemilinYuk - Es Teh, Pop Ice, Ice Cream, Bolen dan cemilan lainnya. Pesan via WhatsApp!">
+  <title>Produk - DcemilinYuk</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="reveal">Katalog Produk</h1>
+      <p class="reveal reveal-delay-1">Temukan cemilan dan minuman favoritmu. Pesan langsung via WhatsApp!</p>
+    </div>
+  </div>
+
+  <div class="product-page-content">
+    <div class="container">
+      <div class="product-filters">
+        <div class="filter-group" id="filter-buttons">
+          <!-- Diisi otomatis oleh JS -->
+        </div>
+        <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Cari produk..." id="search-input" class="form-input" oninput="applySearch()" style="padding-left:2.5rem;border-radius:var(--radius-full);">
+          </div>
+          <select class="form-input" id="sort-select" onchange="applySort()" style="width:auto;border-radius:var(--radius-full);">
+            <option value="popular">Terpopuler</option>
+            <option value="price-low">Harga Terendah</option>
+            <option value="price-high">Harga Tertinggi</option>
+            <option value="rating">Rating Tertinggi</option>
+            <option value="name">Nama A-Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="product-count" style="margin-bottom:1rem;color:var(--text-secondary);font-size:0.9rem;"></div>
+      <div class="products-grid" id="products-grid"></div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/products.js"></script>
+  <script>
+    let currentCategory = 'all';
+    let currentSearch = '';
+    let currentSort = 'popular';
+
+    function buildFilterButtons() {
+      const cats = getCategories();
+      const btns = document.getElementById('filter-buttons');
+      btns.innerHTML = `
+        <button class="filter-btn ${currentCategory === 'all' ? 'active' : ''}" data-cat="all" onclick="applyFilter('all')">Semua</button>
+        ${cats.map(c => `
+          <button class="filter-btn ${currentCategory === c.id ? 'active' : ''}" data-cat="${c.id}" onclick="applyFilter('${c.id}')">${c.icon} ${c.name}</button>
+        `).join('')}
+      `;
+    }
+
+    function applyFilter(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.cat === cat));
+      refreshProducts();
+    }
+
+    function applySearch() {
+      currentSearch = document.getElementById('search-input').value;
+      refreshProducts();
+    }
+
+    function applySort() {
+      currentSort = document.getElementById('sort-select').value;
+      refreshProducts();
+    }
+
+    function refreshProducts() {
+      const products = filterProducts(currentCategory, currentSearch, currentSort);
+      document.getElementById('product-count').textContent = `Menampilkan ${products.length} produk`;
+      renderProducts('#products-grid', products);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('cat');
+      const cats = getCategories();
+      if (cat && cats.find(c => c.id === cat)) {
+        currentCategory = cat;
+      }
+      buildFilterButtons();
+      refreshProducts();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Checkout pesanan DcemilinYuk.">
+  <title>Checkout - DcemilinYuk</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="cart-content">
+    <div class="container">
+      <h1 style="margin-bottom:0.5rem;" class="reveal">Checkout</h1>
+      <p style="color:var(--text-secondary);margin-bottom:2rem;" class="reveal reveal-delay-1">Lengkapi informasi pengiriman dan pembayaran.</p>
+
+      <div class="checkout-layout">
+        <div>
+          <!-- Shipping Info -->
+          <div class="checkout-section reveal reveal-delay-2">
+            <h3>Informasi Pengiriman</h3>
+            <form id="checkout-form" onsubmit="handleCheckout(event)">
+              <div class="form-group">
+                <label class="form-label">Nama Penerima</label>
+                <input type="text" name="recipient" class="form-input" placeholder="Nama lengkap penerima" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">No. Telepon</label>
+                <input type="tel" name="phone" class="form-input" placeholder="08xx-xxxx-xxxx" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Alamat Lengkap</label>
+                <textarea name="address" class="form-input" placeholder="Jl. Contoh No. 123, RT/RW, Kelurahan, Kecamatan" required></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Catatan (opsional)</label>
+                <input type="text" name="notes" class="form-input" placeholder="Catatan tambahan untuk kurir">
+              </div>
+            </form>
+          </div>
+
+          <!-- Payment Method -->
+          <div class="checkout-section reveal reveal-delay-3">
+            <h3>Metode Pembayaran</h3>
+            <div class="payment-options">
+              <label class="payment-option selected" onclick="selectPayment(this)">
+                <input type="radio" name="payment" value="cod" checked> <span>Cash on Delivery (COD)</span>
+              </label>
+              <label class="payment-option" onclick="selectPayment(this)">
+                <input type="radio" name="payment" value="transfer"> <span>Transfer Bank</span>
+              </label>
+              <label class="payment-option" onclick="selectPayment(this)">
+                <input type="radio" name="payment" value="ewallet"> <span>E-Wallet (GoPay, OVO, DANA)</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block reveal reveal-delay-4" onclick="handleCheckout(event)">Buat Pesanan</button>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="cart-summary reveal reveal-right reveal-delay-2" id="checkout-summary"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="success-modal">
+    <div class="modal">
+      <div class="modal-body" style="text-align:center;padding:3rem;">
+        <div style="font-size:4rem;margin-bottom:1rem;"></div>
+        <h2>Pesanan Berhasil!</h2>
+        <p style="color:var(--text-secondary);margin:1rem 0;">Terima kasih telah berbelanja di DcemilinYuk. Pesananmu sedang diproses!</p>
+        <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:2rem;">ID Pesanan: <strong id="order-id">-</strong></p>
+        <a href="index.html" class="btn btn-primary">Kembali ke Beranda</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-container"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/products.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    function selectPayment(el) {
+      document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function handleCheckout(e) {
+      e.preventDefault();
+      if (!requireAuth()) return;
+      const cart = getCart();
+      if (cart.length === 0) { showToast('Keranjang kosong!', 'warning'); return; }
+
+      const form = document.getElementById('checkout-form');
+      const recipient = form.querySelector('[name="recipient"]').value;
+      const phone = form.querySelector('[name="phone"]').value;
+      const address = form.querySelector('[name="address"]').value;
+
+      if (!recipient || !phone || !address) { showToast('Lengkapi informasi pengiriman!', 'warning'); return; }
+
+      const orderId = 'ORD-' + generateId().toUpperCase();
+      document.getElementById('order-id').textContent = orderId;
+      clearCart();
+      document.getElementById('success-modal').classList.add('active');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCheckoutSummary();
+      // Pre-fill if logged in
+      const user = getCurrentUser();
+      if (user) {
+        const form = document.getElementById('checkout-form');
+        if (user.name) form.querySelector('[name="recipient"]').value = user.name;
+        if (user.phone) form.querySelector('[name="phone"]').value = user.phone;
+        if (user.address) form.querySelector('[name="address"]').value = user.address;
+      }
+    });
+  </script>
+</body>
+</html>
