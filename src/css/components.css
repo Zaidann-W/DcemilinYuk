@@ -25,6 +25,43 @@
 .mobile-menu a { display: block; padding: 0.75rem 1rem; color: var(--text-secondary); font-weight: 500; border-radius: var(--radius-sm); }
 .mobile-menu a:hover { background: var(--bg-secondary); color: var(--primary); }
 
+/* ===== THEME TOGGLE SWITCH ===== */
+.theme-switch {
+  width: 52px;
+  height: 28px;
+  background: #E2E8F0;
+  border-radius: 999px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.4s ease;
+  flex-shrink: 0;
+  border: 2px solid rgba(0,0,0,0.06);
+}
+.theme-switch.dark { background: #1E293B; border-color: rgba(255,255,255,0.1); }
+.theme-switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.3s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.theme-switch.dark .theme-switch-thumb {
+  transform: translateX(24px);
+  background: #334155;
+}
+.theme-switch .icon-sun { width: 13px; height: 13px; color: #F97316; display: block; }
+.theme-switch .icon-moon { width: 12px; height: 12px; color: #94A3B8; display: none; }
+.theme-switch.dark .icon-sun { display: none; }
+.theme-switch.dark .icon-moon { display: block; }
+.theme-switch:hover .theme-switch-thumb { box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+
 /* ===== BUTTONS ===== */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0.75rem 1.5rem; border-radius: var(--radius); font-weight: 500; font-size: 0.95rem; cursor: pointer; transition: var(--transition); border: 2px solid transparent; position: relative; overflow: hidden; }
 .btn::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.15); opacity: 0; transition: opacity 0.2s ease; border-radius: inherit; }
