@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>Admin Panel - DcemilinYuk</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="css/style.css">
   <style>
     /* ===== ADMIN SPECIFIC STYLES ===== */
@@ -337,10 +338,13 @@
   <div id="login-screen">
     <div class="login-card">
       <div class="login-logo">DcemilinYuk</div>
-      <p class="login-subtitle">Halaman Admin — Masukkan password untuk lanjut</p>
+      <p class="login-subtitle">Halaman Admin — Login untuk mengelola produk</p>
       <form id="login-form">
         <div class="form-group">
-          <input type="password" id="admin-password" class="form-input" placeholder="Password admin" autocomplete="current-password" required autofocus>
+          <input type="email" id="admin-email" class="form-input" placeholder="Email admin" autocomplete="email" required autofocus>
+        </div>
+        <div class="form-group">
+          <input type="password" id="admin-password" class="form-input" placeholder="Password" autocomplete="current-password" required>
         </div>
         <button type="submit" class="btn btn-primary btn-block" style="margin-top:0.5rem;">Masuk</button>
       </form>
@@ -530,6 +534,7 @@
 
   <script src="js/app.js"></script>
   <script src="js/products.js"></script>
+  <script src="js/supabase.js"></script>
   <script src="js/admin.js"></script>
   <script>
     function switchTab(tab) {

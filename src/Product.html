@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Katalog produk DcemilinYuk - Es Teh, Pop Ice, Ice Cream, Bolen dan cemilan lainnya. Pesan via WhatsApp!">
   <title>Produk - DcemilinYuk</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -47,19 +48,18 @@
 
   <script src="js/app.js"></script>
   <script src="js/products.js"></script>
+  <script src="js/supabase.js"></script>
   <script>
     let currentCategory = 'all';
-    let currentSearch = '';
-    let currentSort = 'popular';
+    let currentSearch   = '';
+    let currentSort     = 'popular';
 
     function buildFilterButtons() {
       const cats = getCategories();
       const btns = document.getElementById('filter-buttons');
       btns.innerHTML = `
-        <button class="filter-btn ${currentCategory === 'all' ? 'active' : ''}" data-cat="all" onclick="applyFilter('all')">Semua</button>
-        ${cats.map(c => `
-          <button class="filter-btn ${currentCategory === c.id ? 'active' : ''}" data-cat="${c.id}" onclick="applyFilter('${c.id}')">${c.icon} ${c.name}</button>
-        `).join('')}
+        <button class="filter-btn active" data-cat="all" onclick="applyFilter('all')">Semua</button>
+        ${cats.map(c => `<button class="filter-btn" data-cat="${c.id}" onclick="applyFilter('${c.id}')">${c.icon} ${c.name}</button>`).join('')}
       `;
     }
 
@@ -68,16 +68,8 @@
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.cat === cat));
       refreshProducts();
     }
-
-    function applySearch() {
-      currentSearch = document.getElementById('search-input').value;
-      refreshProducts();
-    }
-
-    function applySort() {
-      currentSort = document.getElementById('sort-select').value;
-      refreshProducts();
-    }
+    function applySearch() { currentSearch = document.getElementById('search-input').value; refreshProducts(); }
+    function applySort()   { currentSort   = document.getElementById('sort-select').value;   refreshProducts(); }
 
     function refreshProducts() {
       const products = filterProducts(currentCategory, currentSearch, currentSort);
@@ -85,14 +77,16 @@
       renderProducts('#products-grid', products);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
+      await initData();
       const params = new URLSearchParams(window.location.search);
-      const cat = params.get('cat');
-      const cats = getCategories();
-      if (cat && cats.find(c => c.id === cat)) {
-        currentCategory = cat;
-      }
+      const cat    = params.get('cat');
+      if (cat && getCategories().find(c => c.id === cat)) currentCategory = cat;
       buildFilterButtons();
+      if (currentCategory !== 'all') {
+        document.querySelectorAll('.filter-btn').forEach(btn =>
+          btn.classList.toggle('active', btn.dataset.cat === currentCategory));
+      }
       refreshProducts();
     });
   </script>
