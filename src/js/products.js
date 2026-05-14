@@ -20,10 +20,10 @@ const DEFAULT_PRODUCTS = [
 ];
 
 const DEFAULT_CATEGORIES = [
-  { id: 'esteh',    name: 'Es Teh',    icon: '🍵', description: 'Segar & Nikmat' },
-  { id: 'popice',   name: 'Pop Ice',   icon: '🧊', description: 'Dingin & Manis' },
-  { id: 'icecream', name: 'Ice Cream', icon: '🍦', description: 'Premium & Lezat' },
-  { id: 'bolen',    name: 'Bolen',     icon: '🥐', description: 'Renyah & Gurih' }
+  { id: 'esteh',    name: 'Es Teh',    icon: 'fa-solid fa-mug-hot',   description: 'Segar & Nikmat' },
+  { id: 'popice',   name: 'Pop Ice',   icon: 'fa-solid fa-snowflake',  description: 'Dingin & Manis' },
+  { id: 'icecream', name: 'Ice Cream', icon: 'fa-solid fa-ice-cream',  description: 'Premium & Lezat' },
+  { id: 'bolen',    name: 'Bolen',     icon: 'fa-solid fa-bread-slice', description: 'Renyah & Gurih' }
 ];
 
 // Gunakan cache dari supabase.js (_products, _categories)
@@ -94,10 +94,16 @@ function renderProducts(container, products) {
 function renderCategories(containerId) {
   const el = $(containerId);
   if (!el) return;
-  el.innerHTML = getCategories().map(cat => `
-    <div class="category-card reveal" onclick="window.location.href='Product.html?cat=${cat.id}'">
-      <div class="category-icon">${cat.icon}</div>
-      <h4>${cat.name}</h4>
-      <p>${cat.description || ''}</p>
-    </div>`).join('');
+  el.innerHTML = getCategories().map(cat => {
+    // Kalau icon dimulai 'fa-' → render Font Awesome <i>, kalau tidak → emoji biasa
+    const iconHtml = cat.icon && cat.icon.startsWith('fa-')
+      ? `<i class="${cat.icon}"></i>`
+      : cat.icon;
+    return `
+      <div class="category-card reveal" onclick="window.location.href='Product.html?cat=${cat.id}'">
+        <div class="category-icon">${iconHtml}</div>
+        <h4>${cat.name}</h4>
+        <p>${cat.description || ''}</p>
+      </div>`;
+  }).join('');
 }
