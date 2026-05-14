@@ -9,6 +9,7 @@
 .navbar .container { display: flex; align-items: center; justify-content: space-between; height: 100%; }
 .navbar-brand { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
 .navbar-brand span { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.brand-icon { font-size: 1.3rem; color: var(--primary); -webkit-text-fill-color: var(--primary); filter: drop-shadow(0 1px 3px rgba(249,115,22,0.3)); }
 .nav-links { display: flex; align-items: center; gap: 2rem; }
 .nav-links a { color: var(--text-secondary); font-weight: 500; font-size: 0.95rem; position: relative; padding: 4px 0; }
 .nav-links a:hover, .nav-links a.active { color: var(--primary); }
