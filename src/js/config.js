@@ -13,12 +13,12 @@ const CONFIG = {
   HERO_IMAGE: 'img/hero.png',
 
   // ── WHATSAPP ────────────────────────────────────────────────
-  WA_NUMBER: '6282184445857',              // Format: 62xxx (tanpa +)
+  WA_NUMBER: '6281331208790',              // Format: 62xxx (tanpa +)
   WA_DEFAULT_MSG: 'Halo, saya ingin memesan dari {store}!',
 
   // ── KONTAK & SOSIAL MEDIA ───────────────────────────────────
   ADDRESS:   'Jl. Bogangin Baru Blok D No. 5',
-  PHONE:     '082184445857',
+  PHONE:     '081331208790',
   EMAIL:     '',
   INSTAGRAM: '@dcemilin_yuk',
   HOURS:     'Setiap Hari, 10:00 – 22:00 WIB',
