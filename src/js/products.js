@@ -144,7 +144,13 @@ function _injectPdModal() {
             <button class="qty-btn" style="width:44px;height:44px;font-size:1.3rem;" onclick="pdQty(1)">+</button>
           </div>
         </div>
-        <button id="pd-order-btn" class="btn-wa-sm" style="width:100%;justify-content:center;display:flex;align-items:center;gap:8px;font-size:1rem;padding:0.875rem;">${waIcon} Pesan via WA</button>
+        <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+          <button id="pd-cart-btn" style="flex:1;padding:0.875rem;border:none;border-radius:var(--radius);background:var(--primary);color:#fff;cursor:pointer;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;font-size:0.95rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Tambah ke Keranjang
+          </button>
+          <button id="pd-order-btn" class="btn-wa-sm" style="flex:1;justify-content:center;display:flex;align-items:center;gap:7px;font-size:0.9rem;padding:0.875rem;">${waIcon} Langsung Pesan</button>
+        </div>
       </div>
     </div>
   </div>`;
@@ -207,6 +213,7 @@ function showProductModal(productId) {
       </div>
     </div>` : '';
 
+  document.getElementById('pd-cart-btn').onclick  = pdAddToCart;
   document.getElementById('pd-order-btn').onclick = pdOrder;
   overlay.style.display = 'flex';
   document.body.style.overflow = 'hidden';
@@ -241,6 +248,18 @@ function pdQty(delta) {
   let q = parseInt(el.textContent) + delta;
   if (q < 1) q = 1; if (q > 99) q = 99;
   el.textContent = q;
+}
+
+function pdAddToCart() {
+  if (!_pdProduct) return;
+  const o       = document.getElementById('pd-overlay');
+  const price   = parseInt(o.dataset.currentPrice || _pdProduct.price);
+  const variant = o.dataset.currentVariant || '';
+  const qty     = parseInt(document.getElementById('pd-qty').textContent) || 1;
+  if (typeof addToCart === 'function') {
+    addToCart(_pdProduct.id, qty, price, variant);
+    closePdModal();
+  }
 }
 
 function pdOrder() {
