@@ -226,8 +226,16 @@ function previewImage(inputId, previewId) {
   const url     = document.getElementById(inputId)?.value?.trim();
   const preview = document.getElementById(previewId);
   if (!preview) return;
-  if (url) { preview.src = url; preview.style.display = 'block'; preview.onerror = () => { preview.style.display = 'none'; }; }
-  else      { preview.style.display = 'none'; }
+  if (!url) { preview.style.display = 'none'; return; }
+
+  // Reset dulu
+  preview.style.display = 'none';
+  preview.src = '';
+
+  const testImg = new Image();
+  testImg.onload  = () => { preview.src = url; preview.style.display = 'block'; };
+  testImg.onerror = () => { preview.style.display = 'none'; };
+  testImg.src = url;
 }
 
 function filterAdminProducts() {
