@@ -209,3 +209,22 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
 .payment-option { display: flex; align-items: center; gap: 12px; padding: 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: var(--transition); }
 .payment-option:hover { border-color: var(--primary); background: var(--primary-light); transform: translateX(4px); }
 .payment-option.selected { border-color: var(--primary); background: var(--primary-light); }
+
+/* ===== VARIANT SELECTOR ===== */
+.variant-selector { margin: 0.6rem 0; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.variant-label { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; }
+.variant-pills { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.variant-pill {
+  padding: 0.25rem 0.75rem; border-radius: var(--radius-full);
+  border: 1.5px solid var(--border); background: var(--surface);
+  color: var(--text-secondary); font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; transition: var(--transition-fast);
+}
+.variant-pill:hover { border-color: var(--primary); color: var(--primary); }
+.variant-pill.active { border-color: var(--primary); background: var(--primary); color: #fff; }
+
+/* ===== QTY + ORDER ROW ===== */
+.card-bottom-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; }
+.qty-selector { display: flex; align-items: center; gap: 0.4rem; }
+.qty-value { min-width: 24px; text-align: center; font-weight: 700; font-size: 0.95rem; }
+.btn-order-full { width: 100%; justify-content: center; display: flex; align-items: center; gap: 6px; }

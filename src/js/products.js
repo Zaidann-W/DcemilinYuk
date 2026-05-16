@@ -9,10 +9,18 @@ const DEFAULT_PRODUCTS = [
   { id: 'pi2', name: 'Pop Ice Anggur',      category: 'popice',   price: 5000,  image: 'img/popice.png',   description: 'Pop Ice rasa anggur favorit semua kalangan.', rating: 4.4, sold: 720,  badge: '' },
   { id: 'pi3', name: 'Pop Ice Strawberry',  category: 'popice',   price: 6000,  image: 'img/popice.png',   description: 'Pop Ice strawberry dengan rasa buah segar.', rating: 4.6, sold: 650,  badge: 'Populer' },
   { id: 'pi4', name: 'Pop Ice Coklat',      category: 'popice',   price: 6000,  image: 'img/popice.png',   description: 'Pop Ice coklat yang creamy dan lezat.', rating: 4.3, sold: 580,  badge: '' },
-  { id: 'ic1', name: 'Ice Cream Vanilla',   category: 'icecream', price: 10000, image: 'img/icecream.png', description: 'Ice cream vanilla premium dengan biji vanilla asli.', rating: 4.8, sold: 1500, badge: 'Best Seller' },
-  { id: 'ic2', name: 'Ice Cream Coklat',    category: 'icecream', price: 10000, image: 'img/icecream.png', description: 'Ice cream coklat Belgian yang kaya rasa.', rating: 4.7, sold: 1320, badge: '' },
-  { id: 'ic3', name: 'Ice Cream Strawberry',category: 'icecream', price: 12000, image: 'img/icecream.png', description: 'Ice cream strawberry dengan potongan buah asli.', rating: 4.9, sold: 980,  badge: 'Baru' },
-  { id: 'ic4', name: 'Ice Cream Matcha',    category: 'icecream', price: 15000, image: 'img/icecream.png', description: 'Ice cream matcha Jepang premium grade A.', rating: 4.8, sold: 870,  badge: '' },
+  {
+    id: 'ic1', name: 'Es cemil', category: 'icecream', price: 5000,
+    image: 'img/escemil.jpeg',
+    description: 'Es cemil lezat dengan aneka topping — tersedia porsi 5k dan 10k.',
+    rating: 4.9, sold: 1500, badge: 'Best Seller',
+    variants: [
+      { name: 'Porsi Kecil', price: 5000,  label: '5k'  },
+      { name: 'Porsi Besar', price: 10000, label: '10k' }
+    ]
+  },
+  { id: 'ic2', name: 'Es cemil Coklat',    category: 'icecream', price: 10000, image: 'img/escemil.jpeg', description: 'Es cemil dengan topping coklat Belgian yang kaya rasa.', rating: 4.7, sold: 1320, badge: '' },
+  { id: 'ic3', name: 'Es cemil Strawberry',category: 'icecream', price: 10000, image: 'img/escemil.jpeg', description: 'Es cemil dengan topping strawberry segar.', rating: 4.9, sold: 980,  badge: 'Baru' },
   { id: 'bl1', name: 'Bolen Pisang',        category: 'bolen',    price: 5000,  image: 'img/bolen.png',    description: 'Bolen pisang renyah dengan isian pisang manis.', rating: 4.7, sold: 2100, badge: 'Best Seller' },
   { id: 'bl2', name: 'Bolen Keju',          category: 'bolen',    price: 7000,  image: 'img/bolen.png',    description: 'Bolen keju dengan lelehan keju yang gurih.', rating: 4.6, sold: 1800, badge: '' },
   { id: 'bl3', name: 'Bolen Coklat',        category: 'bolen',    price: 7000,  image: 'img/bolen.png',    description: 'Bolen dengan isian coklat leleh yang nikmat.', rating: 4.8, sold: 1650, badge: 'Populer' },
@@ -31,6 +39,50 @@ const DEFAULT_CATEGORIES = [
 function getProducts()   { return _products   || DEFAULT_PRODUCTS; }
 function getCategories() { return _categories || DEFAULT_CATEGORIES; }
 
+// ===== VARIANT & QTY HELPERS =====
+function changeVariant(btn, price, label) {
+  const card = btn.closest('.product-card');
+  card.querySelectorAll('.variant-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  card.dataset.currentPrice = price;
+  card.dataset.currentVariant = label;
+  const priceEl = card.querySelector('.card-price');
+  if (priceEl) priceEl.textContent = formatCurrency(price);
+}
+
+function changeQty(btn, delta) {
+  const card = btn.closest('.product-card');
+  const qtyEl = card.querySelector('.qty-value');
+  let qty = parseInt(qtyEl.textContent) + delta;
+  if (qty < 1) qty = 1;
+  if (qty > 99) qty = 99;
+  qtyEl.textContent = qty;
+}
+
+function orderProductCard(btn) {
+  const card  = btn.closest('.product-card');
+  const id    = card.dataset.id;
+  const prods = getProducts();
+  const prod  = prods.find(p => p.id === id);
+  if (!prod) return;
+
+  const price   = parseInt(card.dataset.currentPrice  || prod.price);
+  const variant = card.dataset.currentVariant || '';
+  const qty     = parseInt(card.querySelector('.qty-value')?.textContent || '1');
+  const total   = price * qty;
+
+  const variantText = variant ? ` (${variant})` : '';
+  const message = encodeURIComponent(
+    `Halo DcemilinYuk! Saya mau pesan:\n\n` +
+    `*${prod.name}${variantText}*\n` +
+    `Harga satuan: ${formatCurrency(price)}\n` +
+    `Jumlah: ${qty} porsi\n` +
+    `Total: *${formatCurrency(total)}*\n\n` +
+    `Mohon konfirmasi ketersediaan ya! Terima kasih 🙏`
+  );
+  window.open(`https://wa.me/${WA_NUMBER}?text=${message}`, '_blank');
+}
+
 // ===== RENDER =====
 function renderStars(rating) {
   const full = Math.floor(rating);
@@ -42,9 +94,33 @@ function renderProductCard(product) {
   const cats    = getCategories();
   const catName = cats.find(c => c.id === product.category)?.name || product.category;
   const badgeClass = product.badge === 'Best Seller' ? 'sale' : product.badge === 'Baru' ? 'new' : '';
+
+  // Parse variants (bisa string JSON dari Supabase atau array dari DEFAULT)
+  let variants = null;
+  if (product.variants) {
+    variants = typeof product.variants === 'string'
+      ? (() => { try { return JSON.parse(product.variants); } catch { return null; } })()
+      : product.variants;
+  }
+
+  const defaultPrice   = variants ? variants[0].price : product.price;
+  const defaultVariant = variants ? variants[0].label : '';
+
   const waIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.558 4.116 1.535 5.845L.057 23.997l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.783-.574-5.318-1.562l-.38-.23-3.742.981.998-3.648-.248-.396A9.962 9.962 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>`;
+
+  const variantHtml = variants ? `
+    <div class="variant-selector">
+      <span class="variant-label">Pilih Porsi:</span>
+      <div class="variant-pills">
+        ${variants.map((v, i) => `
+          <button class="variant-pill ${i === 0 ? 'active' : ''}"
+            onclick="changeVariant(this, ${v.price}, '${v.label}')"
+            title="${v.name}">${v.label}</button>`).join('')}
+      </div>
+    </div>` : '';
+
   return `
-    <div class="card product-card reveal" data-id="${product.id}">
+    <div class="card product-card reveal" data-id="${product.id}" data-current-price="${defaultPrice}" data-current-variant="${defaultVariant}">
       ${product.badge ? `<span class="product-badge ${badgeClass}">${product.badge}</span>` : ''}
       <img src="${product.image}" alt="${product.name}" class="card-img" loading="lazy" onerror="this.src='img/placeholder.png'">
       <div class="card-body">
@@ -55,9 +131,17 @@ function renderProductCard(product) {
           <span class="stars">${renderStars(product.rating)}</span>
           <span class="count">(${product.sold} terjual)</span>
         </div>
+        ${variantHtml}
         <div class="card-footer" style="border:none;padding:0;margin-top:0.75rem;">
-          <span class="card-price">${formatCurrency(product.price)}</span>
-          <button class="btn-wa-sm" onclick="openWhatsApp('${product.name.replace(/'/g,"\\'")}', ${product.price})">${waIcon} Pesan</button>
+          <div class="card-bottom-row">
+            <span class="card-price">${formatCurrency(defaultPrice)}</span>
+            <div class="qty-selector">
+              <button class="qty-btn" onclick="changeQty(this, -1)">−</button>
+              <span class="qty-value">1</span>
+              <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
+            </div>
+          </div>
+          <button class="btn-wa-sm btn-order-full" onclick="orderProductCard(this)">${waIcon} Pesan via WA</button>
         </div>
       </div>
     </div>`;
