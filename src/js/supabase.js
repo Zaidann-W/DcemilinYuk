@@ -1,8 +1,11 @@
 /* ===== DcemilinYuk - Supabase Client ===== */
-const SUPABASE_URL = 'https://grbkjuyctjijnmaqvxib.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyYmtqdXljdGppam5tYXF2eGliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTI3NjQsImV4cCI6MjA5NDMyODc2NH0.8btpBaS8rCQMjqyjEs8Jesle0WK0m_mVcqbdtndySiM';
+// Credentials dibaca dari config.js
+const SUPABASE_URL = (typeof CONFIG !== 'undefined') ? CONFIG.SUPABASE_URL : '';
+const SUPABASE_KEY = (typeof CONFIG !== 'undefined') ? CONFIG.SUPABASE_KEY : '';
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = (SUPABASE_URL && SUPABASE_KEY)
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
+  : null;
 
 // Global data cache (diisi oleh initData)
 let _products   = null;
