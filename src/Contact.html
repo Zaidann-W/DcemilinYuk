@@ -88,7 +88,15 @@
   <script>
     function handleContact(e) {
       e.preventDefault();
-      showToast('Pesan berhasil dikirim! Kami akan segera menghubungi kamu.', 'success');
+      const name    = e.target.querySelector('[name="name"]').value.trim();
+      const email   = e.target.querySelector('[name="email"]').value.trim();
+      const subject = e.target.querySelector('[name="subject"]').value.trim();
+      const message = e.target.querySelector('[name="message"]').value.trim();
+
+      const waNumber = (typeof CONFIG !== 'undefined') ? CONFIG.WA_NUMBER : '6282184445857';
+      const text = `Halo, saya *${name}* (${email})%0A%0A*Subjek:* ${subject}%0A%0A*Pesan:*%0A${message}`;
+      window.open(`https://wa.me/${waNumber}?text=${text}`, '_blank');
+      showToast('Membuka WhatsApp...', 'success');
       e.target.reset();
     }
   </script>
