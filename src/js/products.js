@@ -149,11 +149,18 @@ function _injectPdModal() {
     </div>
   </div>`;
   document.body.appendChild(div.firstElementChild);
-  // Inject animation keyframe once
+  // Inject smooth animation keyframes
   if (!document.getElementById('pd-style')) {
     const s = document.createElement('style');
     s.id = 'pd-style';
-    s.textContent = '@keyframes pdSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}';
+    s.textContent = `
+      @keyframes pdSlideUp   { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+      @keyframes pdSlideDown { from { transform: translateY(0);    opacity: 1; } to { transform: translateY(100%); opacity: 0; } }
+      @keyframes pdFadeIn    { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes pdFadeOut   { from { opacity: 1; } to { opacity: 0; } }
+      #pd-card { animation: pdSlideUp 0.35s cubic-bezier(0.34,1.1,0.64,1) both; }
+      #pd-overlay { animation: pdFadeIn 0.25s ease both; }
+    `;
     document.head.appendChild(s);
   }
 }
@@ -206,9 +213,18 @@ function showProductModal(productId) {
 }
 
 function closePdModal() {
-  const o = document.getElementById('pd-overlay');
-  if (o) o.style.display = 'none';
-  document.body.style.overflow = '';
+  const o    = document.getElementById('pd-overlay');
+  const card = document.getElementById('pd-card');
+  if (!o) return;
+  // Animasi smooth sebelum disembunyikan
+  card.style.animation = 'pdSlideDown 0.28s cubic-bezier(0.4,0,1,1) both';
+  o.style.animation    = 'pdFadeOut 0.28s ease both';
+  setTimeout(() => {
+    o.style.display    = 'none';
+    card.style.animation = '';
+    o.style.animation    = '';
+    document.body.style.overflow = '';
+  }, 280);
 }
 
 function pdVariant(btn, price, label) {
