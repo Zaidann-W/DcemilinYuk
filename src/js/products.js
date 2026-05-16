@@ -24,14 +24,23 @@ const DEFAULT_PRODUCTS = [
   { id: 'bl1', name: 'Bolen Pisang',        category: 'bolen',    price: 5000,  image: 'img/bolen.png',    description: 'Bolen pisang renyah dengan isian pisang manis.', rating: 4.7, sold: 2100, badge: 'Best Seller' },
   { id: 'bl2', name: 'Bolen Keju',          category: 'bolen',    price: 7000,  image: 'img/bolen.png',    description: 'Bolen keju dengan lelehan keju yang gurih.', rating: 4.6, sold: 1800, badge: '' },
   { id: 'bl3', name: 'Bolen Coklat',        category: 'bolen',    price: 7000,  image: 'img/bolen.png',    description: 'Bolen dengan isian coklat leleh yang nikmat.', rating: 4.8, sold: 1650, badge: 'Populer' },
-  { id: 'bl4', name: 'Bolen Pisang Coklat', category: 'bolen',    price: 8000,  image: 'img/bolen.png',    description: 'Kombinasi pisang dan coklat dalam pastry renyah.', rating: 4.9, sold: 1400, badge: '' }
+  { id: 'bl4', name: 'Bolen Pisang Coklat', category: 'bolen',    price: 8000,  image: 'img/bolen.png',    description: 'Kombinasi pisang dan coklat dalam pastry renyah.', rating: 4.9, sold: 1400, badge: '' },
+  // ── MAKANAN BERAT ──
+  { id: 'mb1', name: 'Nasi Ayam Bakar',      category: 'makberat', price: 15000, image: 'img/nasiayam1.jpeg', description: 'Nasi ayam bakar hemat, gurih dan lezat dengan sambal spesial.',    rating: 4.8, sold: 320, badge: 'Populer' },
+  { id: 'mb2', name: 'Nasi Kotak Ayam Bakar',category: 'makberat', price: 20000, image: 'img/nasiayam2.jpeg', description: 'Nasi kotak ayam bakar lengkap dengan lauk dan sayur.',                 rating: 4.7, sold: 210, badge: '' },
+  { id: 'mb3', name: 'Burger Sapi/Ayam',     category: 'makberat', price: 15000, image: 'img/burger.jpeg',   description: 'Burger juicy pilihan daging sapi atau ayam, saus spesial.',        rating: 4.6, sold: 185, badge: '' },
+  { id: 'mb4', name: 'Kebab Sapi',           category: 'makberat', price: 12000, image: 'img/kebab.jpeg',    description: 'Kebab sapi dengan sayuran segar dan saus mayonaise pedas.',       rating: 4.5, sold: 160, badge: '' },
+  { id: 'mb5', name: 'Mie Geprek Katsu',     category: 'makberat', price: 15000, image: 'img/miegeprek.jpeg', description: 'Mie geprek dengan katsu ayam crispy dan sambal geprek pedas.',    rating: 4.7, sold: 140, badge: 'Baru' },
+  { id: 'mb6', name: 'Seblak Rafael',        category: 'makberat', price: 12000, image: 'img/seblak.jpeg',   description: 'Seblak khas Rafael, pedas gurih dengan aneka topping.',            rating: 4.6, sold: 130, badge: '' },
+  { id: 'mb7', name: 'Martabak Kulit Lumpia',category: 'makberat', price: 10000, image: 'img/martabak.jpeg', description: 'Martabak telur renyah dengan kulit lumpia tipis, gurih nikmat.',   rating: 4.8, sold: 200, badge: 'Populer' }
 ];
 
 const DEFAULT_CATEGORIES = [
-  { id: 'esteh',    name: 'Es Teh',    icon: 'fa-solid fa-mug-hot',   description: 'Segar & Nikmat' },
-  { id: 'popice',   name: 'Pop Ice',   icon: 'fa-solid fa-snowflake',  description: 'Dingin & Manis' },
-  { id: 'icecream', name: 'Ice Cream', icon: 'fa-solid fa-ice-cream',  description: 'Premium & Lezat' },
-  { id: 'bolen',    name: 'Bolen',     icon: 'fa-solid fa-bread-slice', description: 'Renyah & Gurih' }
+  { id: 'esteh',    name: 'Es Teh',        icon: 'fa-solid fa-mug-hot',    description: 'Segar & Nikmat' },
+  { id: 'popice',   name: 'Pop Ice',       icon: 'fa-solid fa-snowflake',   description: 'Dingin & Manis' },
+  { id: 'icecream', name: 'Ice Cream',     icon: 'fa-solid fa-ice-cream',   description: 'Premium & Lezat' },
+  { id: 'bolen',    name: 'Bolen',         icon: 'fa-solid fa-bread-slice', description: 'Renyah & Gurih' },
+  { id: 'makberat', name: 'Makanan Berat', icon: 'fa-solid fa-utensils',    description: 'Mengenyangkan' }
 ];
 
 // Gunakan cache dari supabase.js (_products, _categories)
