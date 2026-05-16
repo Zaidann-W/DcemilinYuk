@@ -118,6 +118,17 @@ function orderProductCard(btn) {
   window.open(`https://wa.me/${WA_NUMBER}?text=${message}`, '_blank');
 }
 
+function addToCartFromCard(btn) {
+  const card    = btn.closest('.product-card');
+  const id      = card.dataset.id;
+  const prod    = getProducts().find(p => p.id === id);
+  if (!prod) return;
+  const price   = parseInt(card.dataset.currentPrice  || prod.price);
+  const variant = card.dataset.currentVariant || '';
+  const qty     = parseInt(card.querySelector('.qty-value')?.textContent || '1');
+  if (typeof addToCart === 'function') addToCart(id, qty, price, variant);
+}
+
 // ===== PRODUCT DETAIL MODAL =====
 let _pdProduct = null;
 
@@ -339,7 +350,10 @@ function renderProductCard(product) {
               <button class="qty-btn" onclick="event.stopPropagation();changeQty(this, 1)">+</button>
             </div>
           </div>
-          <button class="btn-wa-sm btn-order-full" onclick="orderProductCard(this)">${waIcon} Pesan via WA</button>
+          <button class="btn-add-cart btn-order-full" onclick="event.stopPropagation();addToCartFromCard(this)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            Tambah ke Keranjang
+          </button>
         </div>
       </div>
     </div>`;

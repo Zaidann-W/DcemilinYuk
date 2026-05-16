@@ -202,6 +202,23 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
 .btn-wa-sm:hover { background: #128C7E; transform: scale(1.05); box-shadow: 0 4px 12px rgba(37,211,102,0.4); }
 .btn-wa-sm:active { transform: scale(0.97); }
 
+.btn-add-cart {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.45rem 0.9rem;
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: none;
+  transition: var(--transition);
+}
+.btn-add-cart:hover { background: var(--primary-dark, #EA6C00); box-shadow: 0 4px 12px rgba(249,115,22,0.35); }
+.btn-add-cart:active { transform: scale(0.97); }
+
 /* ===== QTY BUTTON HOVER ===== */
 .qty-btn { width: 32px; height: 32px; border-radius: var(--radius-sm); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition-fast); background: var(--surface); color: var(--text); font-size: 1.1rem; }
 .qty-btn:hover { border-color: var(--primary); color: var(--primary); }
