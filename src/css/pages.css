@@ -281,8 +281,6 @@
 
   /* Product card */
   .card-text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.82rem; }
-  .card-img { height: 160px; }
-  .product-card .card-img { height: 160px; }
   .card-body { padding: 0.875rem; }
   .card-footer { padding-top: 0.5rem; }
 
