@@ -182,10 +182,7 @@ function renderFooter() {
           <div>
             <h4>Kategori</h4>
             <div class="footer-links" id="footer-categories">
-              <a href="Product.html?cat=esteh">Es Teh</a>
-              <a href="Product.html?cat=popice">Pop Ice</a>
-              <a href="Product.html?cat=icecream">Ice Cream</a>
-              <a href="Product.html?cat=bolen">Bolen</a>
+              ${(typeof getCategories === 'function' ? getCategories() : []).map(c => `<a href="Product.html?cat=${c.id}">${c.name}</a>`).join('') || '<a href="Product.html">Lihat Semua</a>'}
             </div>
           </div>
           <div>

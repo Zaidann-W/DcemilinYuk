@@ -2,17 +2,21 @@
 
 // ===== AUTH =====
 async function checkAdminAuth() {
-  const { data } = await db.auth.getSession();
-  return !!data.session;
+  if (!db) return false;
+  try {
+    const { data } = await db.auth.getSession();
+    return !!data.session;
+  } catch { return false; }
 }
 
 async function adminLogin(email, password) {
+  if (!db) { showToast('Supabase belum dikonfigurasi di config.js!', 'error'); return false; }
   const { error } = await db.auth.signInWithPassword({ email, password });
   return !error;
 }
 
 async function adminLogout() {
-  await db.auth.signOut();
+  if (db) await db.auth.signOut();
   showLoginScreen();
 }
 
@@ -74,15 +78,20 @@ function renderAdminProducts() {
 
 function renderAdminCategories() {
   const categories = getCategories();
-  document.getElementById('admin-categories-list').innerHTML = categories.map(cat => `
+  document.getElementById('admin-categories-list').innerHTML = categories.map(cat => {
+    const iconHtml = cat.icon && cat.icon.startsWith('fa-')
+      ? `<i class="${cat.icon}"></i>`
+      : (cat.icon || '🛍️');
+    return `
     <div class="admin-cat-item">
-      <span class="cat-icon">${cat.icon}</span>
+      <span class="cat-icon">${iconHtml}</span>
       <div class="cat-details">
         <strong>${cat.name}</strong>
         <span class="cat-id">ID: ${cat.id}</span>
       </div>
       <button class="admin-btn admin-btn-delete" onclick="deleteCategory('${cat.id}')">Hapus</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   ['edit-product-category'].forEach(id => {
     const sel = document.getElementById(id);
@@ -136,6 +145,7 @@ async function saveProduct(e) {
   const sold        = parseInt(document.getElementById('edit-product-sold').value) || 0;
 
   if (!name || !category || !price) { showToast('Nama, kategori, dan harga wajib diisi!', 'error'); return; }
+  if (!db) { showToast('Supabase belum dikonfigurasi!', 'error'); return; }
 
   const payload = { name, category, price, description, image, badge, rating, sold };
 
@@ -158,6 +168,7 @@ async function saveProduct(e) {
 async function deleteProduct(id) {
   const p = getProducts().find(x => x.id === id);
   if (!confirm(`Hapus produk "${p?.name}"?`)) return;
+  if (!db) { showToast('Supabase belum dikonfigurasi!', 'error'); return; }
   const { error } = await db.from('products').delete().eq('id', id);
   if (error) { showToast('Gagal hapus: ' + error.message, 'error'); return; }
   showToast('Produk dihapus!', 'success');
@@ -175,6 +186,7 @@ async function addCategory(e) {
 
   const id = name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
   if (getCategories().find(c => c.id === id)) { showToast('Kategori sudah ada!', 'error'); return; }
+  if (!db) { showToast('Supabase belum dikonfigurasi!', 'error'); return; }
 
   const { error } = await db.from('categories').insert({ id, name, icon, description });
   if (error) { showToast('Gagal tambah kategori: ' + error.message, 'error'); return; }
@@ -199,6 +211,7 @@ async function deleteCategory(id) {
 
 async function resetToDefault() {
   if (!confirm('Reset semua produk ke data default? Semua produk custom akan hilang!')) return;
+  if (!db) { showToast('Supabase belum dikonfigurasi!', 'error'); return; }
   await db.from('products').delete().neq('id', '');
   await db.from('categories').delete().neq('id', '');
   await db.from('categories').insert(DEFAULT_CATEGORIES.map(c => ({ id: c.id, name: c.name, icon: c.icon, description: c.description || '' })));

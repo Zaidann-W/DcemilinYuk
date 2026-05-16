@@ -12,11 +12,18 @@ let _products   = null;
 let _categories = null;
 
 async function initData() {
+  if (!db) {
+    // Supabase belum dikonfig, pakai data default
+    _products   = DEFAULT_PRODUCTS;
+    _categories = DEFAULT_CATEGORIES;
+    return;
+  }
   try {
     const [{ data: prods, error: e1 }, { data: cats, error: e2 }] = await Promise.all([
       db.from('products').select('*').order('created_at'),
       db.from('categories').select('*').order('created_at')
     ]);
+    if (e1 || e2) throw new Error((e1 || e2).message);
     _products   = (prods  && prods.length  > 0) ? prods  : DEFAULT_PRODUCTS;
     _categories = (cats   && cats.length   > 0) ? cats   : DEFAULT_CATEGORIES;
   } catch (err) {
