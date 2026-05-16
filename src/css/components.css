@@ -217,13 +217,9 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
     gap: 0.35rem;
   }
   .qty-selector { width: 100%; justify-content: flex-start; }
-  /* Hapus hover lift di mobile (tidak perlu di touch screen) */
+  /* Hapus hover lift di mobile */
   .card:hover { transform: none; box-shadow: none; }
   .card { transition: box-shadow 0.15s ease; }
-  /* Smooth tap feedback */
-  .card:active { transform: scale(0.98); transition: transform 0.1s ease; }
-  .qty-btn:active { transform: scale(0.9) !important; }
-  .btn-wa-sm:active { transform: scale(0.96) !important; }
 }
 
 /* ===== PAYMENT OPTION HOVER ===== */
