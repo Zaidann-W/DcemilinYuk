@@ -32,15 +32,40 @@ const DEFAULT_PRODUCTS = [
   { id: 'mb4', name: 'Kebab Sapi',           category: 'makberat', price: 12000, image: 'img/kebab.jpeg',    description: 'Kebab sapi dengan sayuran segar dan saus mayonaise pedas.',       rating: 4.5, sold: 160, badge: '' },
   { id: 'mb5', name: 'Mie Geprek Katsu',     category: 'makberat', price: 15000, image: 'img/miegeprek.jpeg', description: 'Mie geprek dengan katsu ayam crispy dan sambal geprek pedas.',    rating: 4.7, sold: 140, badge: 'Baru' },
   { id: 'mb6', name: 'Seblak Rafael',        category: 'makberat', price: 12000, image: 'img/seblak.jpeg',   description: 'Seblak khas Rafael, pedas gurih dengan aneka topping.',            rating: 4.6, sold: 130, badge: '' },
-  { id: 'mb7', name: 'Martabak Kulit Lumpia',category: 'makberat', price: 10000, image: 'img/martabak.jpeg', description: 'Martabak telur renyah dengan kulit lumpia tipis, gurih nikmat.',   rating: 4.8, sold: 200, badge: 'Populer' }
+  { id: 'mb7', name: 'Martabak Kulit Lumpia',category: 'makberat', price: 10000, image: 'img/martabak.jpeg', description: 'Martabak telur renyah dengan kulit lumpia tipis, gurih nikmat.',   rating: 4.8, sold: 200, badge: 'Populer' },
+  // ── KUE & DESSERT ──
+  { id: 'kd1', name: 'Bolu Original',          category: 'kuedessert', price: 20000, image: 'img/bolu.jpeg',         description: 'Bolu lembut dan harum, cocok untuk camilan atau hadiah.',         rating: 4.7, sold: 310, badge: '' },
+  { id: 'kd2', name: 'Bolu Potong',            category: 'kuedessert', price: 10000, image: 'img/bolupotong.jpeg',   description: 'Bolu potong lembut tersedia per slice, pas buat camilan harian.', rating: 4.6, sold: 280, badge: '' },
+  { id: 'kd3', name: 'Bolu Tape Keju 22cm',    category: 'kuedessert', price: 45000, image: 'img/bolupotong2.jpeg',  description: 'Bolu tape keju 22cm, perpaduan tape yang legit dengan keju asin.', rating: 4.9, sold: 150, badge: 'Populer' },
+  { id: 'kd4', name: 'Brownis Choco Chip',     category: 'kuedessert', price: 35000, image: 'img/brownis1.jpeg',     description: 'Brownis choco chip ukuran 20x20, coklat pekat dan moist.',        rating: 4.8, sold: 210, badge: 'Best Seller' },
+  { id: 'kd5', name: 'Brownis Choco Chip Mini',category: 'kuedessert', price: 25000, image: 'img/brownis2.jpeg',     description: 'Brownis choco chip ukuran 20x10, pas untuk 4-6 orang.',           rating: 4.7, sold: 190, badge: '' },
+  { id: 'kd6', name: 'Brownis Hias',           category: 'kuedessert', price: 50000, image: 'img/brownishias.jpeg',  description: 'Brownis cantik dengan hiasan premium, cocok untuk kado & hampers.', rating: 4.9, sold: 120, badge: 'Baru' },
+  { id: 'kd7', name: 'Brownis Choco Cheese',   category: 'kuedessert', price: 40000, image: 'img/brownischeese.jpeg', description: 'Brownis choco cheese tuty fruity, manis asam yang unik.',         rating: 4.8, sold: 140, badge: '' },
+  { id: 'kd8', name: 'Bolen Pisang Keju',      category: 'kuedessert', price: 7000,  image: 'img/bolenpisangkeju.jpeg', description: 'Bolen pisang keju renyah dengan kombinasi manis dan gurih.',     rating: 4.8, sold: 560, badge: 'Populer' },
+  // ── SNACK & GORENGAN ──
+  { id: 'sn1', name: 'Kentang Goreng',          category: 'snack', price: 8000,  image: 'img/kentanggoreng.jpeg', description: 'Kentang goreng crispy, renyah di luar lembut di dalam.',          rating: 4.5, sold: 430, badge: '' },
+  { id: 'sn2', name: 'Sosis Bakar',             category: 'snack', price: 8000,  image: 'img/sosisbakar.jpeg',   description: 'Sosis bakar juicy dengan bumbu spesial dan saus pedas manis.',    rating: 4.6, sold: 390, badge: '' },
+  { id: 'sn3', name: 'Pisang Goreng Madu',      category: 'snack', price: 7000,  image: 'img/pisanggoreng.jpeg', description: 'Pisang goreng madu crispy manis, camilan favorit semua usia.',    rating: 4.7, sold: 510, badge: 'Populer' },
+  { id: 'sn4', name: 'Cireng Salju',            category: 'snack', price: 8000,  image: 'img/cirengSalju.jpeg',  description: 'Cireng salju crispy dengan bumbu balado atau keju, gurih nagih.',  rating: 4.6, sold: 340, badge: '' },
+  { id: 'sn5', name: 'Jasuke',                  category: 'snack', price: 8000,  image: 'img/jasuke.jpeg',       description: 'Jagung susu keju, manis gurih creamy, cocok buat camilan sore.',  rating: 4.5, sold: 270, badge: '' },
+  { id: 'sn6', name: 'Gabin Fla',               category: 'snack', price: 8000,  image: 'img/gabinfla.jpeg',     description: 'Gabin berisi fla creamy lembut, manis dan bikin ketagihan.',      rating: 4.7, sold: 300, badge: 'Baru' },
+  { id: 'sn7', name: 'Risolles',                category: 'snack', price: 5000,  image: 'img/risolles.jpeg',     description: 'Risolles kulit tipis dengan isian ragout ayam creamy dan sayur.', rating: 4.8, sold: 480, badge: 'Populer' },
+  { id: 'sn8', name: 'Sambal Geprek',           category: 'snack', price: 5000,  image: 'img/sambalgeprek.jpeg', description: 'Sambal geprek pedas nikmat, cocok sebagai pelengkap makanan.',    rating: 4.5, sold: 220, badge: '' },
+  // ── HAMPERS ──
+  { id: 'hp1', name: 'Hampers Ayam Bakar',      category: 'hampers', price: 75000, image: 'img/hampers.jpeg',      description: 'Paket hampers ayam bakar lengkap, cocok untuk acara & hadiah.',   rating: 4.9, sold: 85,  badge: 'Best Seller' },
+  { id: 'hp2', name: 'Hampers Ayam Bakar Eksklusif', category: 'hampers', price: 95000, image: 'img/hampersayam2.jpeg', description: 'Hampers ayam bakar eksklusif dengan packaging premium.',       rating: 4.8, sold: 60,  badge: '' },
+  { id: 'hp3', name: 'Hampers Urap Sayur',      category: 'hampers', price: 65000, image: 'img/hampersUrap.jpeg',  description: 'Paket hampers urap urap sayur segar, sehat dan mengenyangkan.',   rating: 4.7, sold: 45,  badge: 'Baru' }
 ];
 
 const DEFAULT_CATEGORIES = [
-  { id: 'esteh',    name: 'Es Teh',        icon: 'fa-solid fa-mug-hot',    description: 'Segar & Nikmat' },
-  { id: 'popice',   name: 'Pop Ice',       icon: 'fa-solid fa-snowflake',   description: 'Dingin & Manis' },
-  { id: 'icecream', name: 'Ice Cream',     icon: 'fa-solid fa-ice-cream',   description: 'Premium & Lezat' },
-  { id: 'bolen',    name: 'Bolen',         icon: 'fa-solid fa-bread-slice', description: 'Renyah & Gurih' },
-  { id: 'makberat', name: 'Makanan Berat', icon: 'fa-solid fa-utensils',    description: 'Mengenyangkan' }
+  { id: 'esteh',      name: 'Es Teh',           icon: 'fa-solid fa-mug-hot',       description: 'Segar & Nikmat' },
+  { id: 'popice',     name: 'Pop Ice',           icon: 'fa-solid fa-snowflake',     description: 'Dingin & Manis' },
+  { id: 'icecream',   name: 'Ice Cream',         icon: 'fa-solid fa-ice-cream',     description: 'Premium & Lezat' },
+  { id: 'bolen',      name: 'Bolen',             icon: 'fa-solid fa-bread-slice',   description: 'Renyah & Gurih' },
+  { id: 'makberat',   name: 'Makanan Berat',     icon: 'fa-solid fa-utensils',      description: 'Mengenyangkan' },
+  { id: 'kuedessert', name: 'Kue & Dessert',     icon: 'fa-solid fa-cake-candles',  description: 'Manis & Lezat' },
+  { id: 'snack',      name: 'Snack & Gorengan',  icon: 'fa-solid fa-drumstick-bite',description: 'Crispy & Nagih' },
+  { id: 'hampers',    name: 'Hampers',           icon: 'fa-solid fa-gift',          description: 'Paket Spesial' }
 ];
 
 // Gunakan cache dari supabase.js (_products, _categories)
