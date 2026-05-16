@@ -204,7 +204,7 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
 
 /* ===== QTY BUTTON HOVER ===== */
 .qty-btn { width: 32px; height: 32px; border-radius: var(--radius-sm); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition-fast); background: var(--surface); color: var(--text); font-size: 1.1rem; }
-.qty-btn:hover { border-color: var(--primary); color: #fff; background: var(--primary); transform: scale(1.05); }
+.qty-btn:hover { border-color: var(--primary); color: var(--primary); }
 
 /* Mobile: perbesar tombol qty agar mudah dipencet */
 @media (max-width: 640px) {
