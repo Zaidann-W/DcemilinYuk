@@ -188,9 +188,9 @@ function renderFooter() {
           <div>
             <h4>Kontak</h4>
             <div class="footer-links">
-              <a href="https://wa.me/${WA_NUMBER}" target="_blank">WhatsApp Kami</a>
-              ${(typeof CONFIG !== 'undefined' && CONFIG.INSTAGRAM) ? `<a href="https://instagram.com/${CONFIG.INSTAGRAM.replace('@','')}" target="_blank">${CONFIG.INSTAGRAM}</a>` : ''}
-              <a href="Contact.html">Hubungi Kami</a>
+              <a href="https://wa.me/${WA_NUMBER}" target="_blank"><i class="fa-brands fa-whatsapp"></i> WhatsApp Kami</a>
+              ${(typeof CONFIG !== 'undefined' && CONFIG.INSTAGRAM) ? `<a href="https://instagram.com/${CONFIG.INSTAGRAM.replace('@','')}" target="_blank"><i class="fa-brands fa-instagram"></i> ${CONFIG.INSTAGRAM}</a>` : ''}
+              <a href="Contact.html"><i class="fa-solid fa-address-card"></i> Hubungi Kami</a>
             </div>
           </div>
         </div>
