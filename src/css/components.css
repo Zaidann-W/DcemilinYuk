@@ -206,6 +206,13 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
 .qty-btn { width: 32px; height: 32px; border-radius: var(--radius-sm); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition-fast); background: var(--surface); color: var(--text); font-size: 1.1rem; }
 .qty-btn:hover { border-color: var(--primary); color: #fff; background: var(--primary); transform: scale(1.05); }
 
+/* Mobile: perbesar tombol qty agar mudah dipencet */
+@media (max-width: 640px) {
+  .qty-btn { width: 40px; height: 40px; font-size: 1.2rem; }
+  .qty-value { font-size: 1rem; font-weight: 700; min-width: 28px; }
+  .card-bottom-row { align-items: center; }
+}
+
 /* ===== PAYMENT OPTION HOVER ===== */
 .payment-option { display: flex; align-items: center; gap: 12px; padding: 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: var(--transition); }
 .payment-option:hover { border-color: var(--primary); background: var(--primary-light); transform: translateX(4px); }
