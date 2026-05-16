@@ -19,7 +19,7 @@ const CONFIG = {
   // ── KONTAK & SOSIAL MEDIA ───────────────────────────────────
   ADDRESS:   'Jakarta, Indonesia',
   EMAIL:     'hello@dcemilinyuk.com',
-  INSTAGRAM: '@dcemilinyuk',
+  INSTAGRAM: '@dcemilin_yuk',
   MAPS_URL:  '',                           // Link Google Maps (opsional)
 
   // ── HERO STATS ──────────────────────────────────────────────
