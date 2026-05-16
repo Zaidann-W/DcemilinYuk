@@ -57,9 +57,12 @@
     function buildFilterButtons() {
       const cats = getCategories();
       const btns = document.getElementById('filter-buttons');
+      const iconHtml = (icon) => icon && icon.startsWith('fa-')
+        ? `<i class="${icon}"></i>`
+        : icon;
       btns.innerHTML = `
         <button class="filter-btn active" data-cat="all" onclick="applyFilter('all')">Semua</button>
-        ${cats.map(c => `<button class="filter-btn" data-cat="${c.id}" onclick="applyFilter('${c.id}')">${c.icon} ${c.name}</button>`).join('')}
+        ${cats.map(c => `<button class="filter-btn" data-cat="${c.id}" onclick="applyFilter('${c.id}')">${iconHtml(c.icon)} ${c.name}</button>`).join('')}
       `;
     }
 
