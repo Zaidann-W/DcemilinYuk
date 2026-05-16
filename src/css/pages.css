@@ -248,14 +248,26 @@
   .mobile-menu a { padding: 0.875rem 1rem; font-size: 1rem; min-height: 48px; display: flex; align-items: center; }
 
   /* Hero */
-  .hero { padding: 5rem 0 3rem; }
+  .hero { padding: 4rem 0 3rem; }
+  .hero-content { gap: 1rem; }
+  .hero-text h1 { font-size: 2.1rem; }
   .hero-actions { flex-direction: column; align-items: center; gap: 0.75rem; }
-  .hero-actions .btn { width: 100%; max-width: 280px; justify-content: center; }
-  .hero-stats { flex-direction: row; gap: 1.5rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; }
-  .hero-stat .number { font-size: 1.4rem; }
-  /* Foto hero di mobile lebih kecil */
-  .hero-image img { max-width: 280px; border-radius: var(--radius-lg); }
-  .hero-image { margin-top: 0.5rem; }
+  .hero-actions .btn { width: 100%; max-width: 300px; justify-content: center; font-size: 1rem; padding: 0.85rem 1.5rem; }
+  .hero-stats { flex-direction: row; gap: 2rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; }
+  .hero-stat .number { font-size: 1.5rem; }
+  /* Sembunyikan hero image di mobile - tampilkan dekorasi saja */
+  .hero-image { display: none; }
+  /* Tambah dekorasi floating di hero background */
+  .hero::after {
+    content: '☕  🧊  🍦  🥐';
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    opacity: 0.15;
+    letter-spacing: 8px;
+    pointer-events: none;
+  }
 
   /* Sections */
   .section { padding: 3rem 0; }
@@ -312,14 +324,19 @@
 
 @media (max-width: 480px) {
   /* Typography */
-  .hero-text h1 { font-size: 1.6rem; }
+  .hero-text h1 { font-size: 1.75rem; line-height: 1.2; }
   h2 { font-size: 1.3rem; }
 
   /* Container */
   .container { padding: 0 0.875rem; }
 
-  /* Products — 1 kolom di layar sangat kecil */
-  .products-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+  /* Hero lebih visual di mobile kecil */
+  .hero { padding: 3.5rem 0 2.5rem; }
+  .hero-text { text-align: center; }
+  .hero-text p { font-size: 1rem; }
+
+  /* Products — 2 kolom di HP (lebih kompak) */
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
   .categories-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
 
   /* Category card */
