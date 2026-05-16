@@ -17,9 +17,11 @@ const CONFIG = {
   WA_DEFAULT_MSG: 'Halo, saya ingin memesan dari {store}!',
 
   // ── KONTAK & SOSIAL MEDIA ───────────────────────────────────
-  ADDRESS:   'Jakarta, Indonesia',
-  EMAIL:     'hello@dcemilinyuk.com',
+  ADDRESS:   'Jl. Bogangin Baru Blok D No. 5',
+  PHONE:     '082184445857',
+  EMAIL:     '',
   INSTAGRAM: '@dcemilin_yuk',
+  HOURS:     'Setiap Hari, 10:00 – 22:00 WIB',
   MAPS_URL:  '',                           // Link Google Maps (opsional)
 
   // ── HERO STATS ──────────────────────────────────────────────
