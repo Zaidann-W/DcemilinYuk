@@ -499,8 +499,13 @@
 
           <div class="form-group">
             <label class="form-label">Foto Produk</label>
-            <input type="text" id="edit-product-image" class="form-input" placeholder="img/escemil.jpeg  atau  https://i.ibb.co/xxx/foto.jpg" oninput="previewImage('edit-product-image','image-preview')">
-            <p class="form-hint">Ketik nama file foto (contoh: <code>img/escemil.jpeg</code>) atau upload ke <a href="https://imgbb.com" target="_blank">imgbb.com</a> lalu paste link-nya</p>
+            <div style="display:flex;gap:0.5rem;align-items:stretch;">
+              <input type="text" id="edit-product-image" class="form-input" style="flex:1;" placeholder="Pilih foto atau paste link" oninput="previewImage('edit-product-image','image-preview')">
+              <button type="button" class="btn btn-primary" onclick="document.getElementById('file-picker').click()" style="white-space:nowrap;">
+                <i class="fa-solid fa-image"></i> Pilih Foto
+              </button>
+            </div>
+            <input type="file" id="file-picker" accept="image/*" style="display:none" onchange="handleFilePick(this)">
             <img id="image-preview" alt="Preview foto">
           </div>
 
@@ -560,6 +565,30 @@
     }
     window.addEventListener('resize', adjustCatLayout);
     adjustCatLayout();
+
+    // ===== FILE PICKER =====
+    function handleFilePick(input) {
+      const file = input.files[0];
+      if (!file) return;
+      // Cek ukuran (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Foto terlalu besar! Maksimal 2MB.', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        document.getElementById('edit-product-image').value = dataUrl;
+        // Langsung tampilkan preview
+        const preview = document.getElementById('image-preview');
+        preview.src = dataUrl;
+        preview.style.display = 'block';
+        showToast('Foto berhasil dipilih!', 'success');
+      };
+      reader.readAsDataURL(file);
+      // Reset input biar bisa pilih file yang sama lagi
+      input.value = '';
+    }
   </script>
 </body>
 </html>
