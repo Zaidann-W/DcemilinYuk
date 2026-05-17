@@ -133,6 +133,17 @@ function openEditModal(id) {
   document.getElementById('edit-product-badge').value      = p.badge || '';
   document.getElementById('edit-product-rating').value     = p.rating;
   document.getElementById('edit-product-sold').value       = p.sold;
+
+  // Populate variants: array/json -> "label:harga" per baris
+  let variantText = '';
+  if (p.variants) {
+    try {
+      const arr = typeof p.variants === 'string' ? JSON.parse(p.variants) : p.variants;
+      variantText = arr.map(v => `${v.label}:${v.price}`).join('\n');
+    } catch {}
+  }
+  document.getElementById('edit-product-variants').value = variantText;
+
   previewImage('edit-product-image', 'image-preview');
   document.getElementById('product-modal').style.display   = 'flex';
 }
@@ -153,10 +164,27 @@ async function saveProduct(e) {
   const rating      = parseFloat(document.getElementById('edit-product-rating').value) || 4.5;
   const sold        = parseInt(document.getElementById('edit-product-sold').value) || 0;
 
+  // Parse variants dari textarea "label:harga" per baris
+  const variantRaw = document.getElementById('edit-product-variants').value.trim();
+  let variants = null;
+  if (variantRaw) {
+    const parsed = variantRaw.split('\n')
+      .map(line => line.trim())
+      .filter(line => line.includes(':'))
+      .map(line => {
+        const idx   = line.lastIndexOf(':');
+        const label = line.slice(0, idx).trim();
+        const price = parseInt(line.slice(idx + 1).trim());
+        return { label, price };
+      })
+      .filter(v => v.label && !isNaN(v.price));
+    if (parsed.length) variants = JSON.stringify(parsed);
+  }
+
   if (!name || !category || !price) { showToast('Nama, kategori, dan harga wajib diisi!', 'error'); return; }
   if (!db) { showToast('Supabase belum dikonfigurasi!', 'error'); return; }
 
-  const payload = { name, category, price, description, image, badge, rating, sold };
+  const payload = { name, category, price, description, image, badge, rating, sold, variants };
 
   let error;
   if (id) {
