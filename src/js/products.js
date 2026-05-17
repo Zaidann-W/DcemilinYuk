@@ -303,6 +303,7 @@ function renderProductCard(product) {
   const cats    = getCategories();
   const catName = cats.find(c => c.id === product.category)?.name || product.category;
   const badgeClass = product.badge === 'Best Seller' ? 'sale' : product.badge === 'Baru' ? 'new' : '';
+  const available   = product.available !== false; // default: tersedia
 
   // Parse variants (bisa string JSON dari Supabase atau array dari DEFAULT)
   let variants = null;
@@ -329,8 +330,9 @@ function renderProductCard(product) {
     </div>` : '';
 
   return `
-    <div class="card product-card reveal" data-id="${product.id}" data-current-price="${defaultPrice}" data-current-variant="${defaultVariant}" onclick="showProductModal('${product.id}')" style="cursor:pointer;">
+    <div class="card product-card reveal${available ? '' : ' sold-out'}" data-id="${product.id}" data-current-price="${defaultPrice}" data-current-variant="${defaultVariant}" onclick="showProductModal('${product.id}')" style="cursor:pointer;">
       ${product.badge ? `<span class="product-badge ${badgeClass}">${product.badge}</span>` : ''}
+      ${!available ? '<span class="badge-habis">HABIS</span>' : ''}
       <img src="${product.image}" alt="${product.name}" class="card-img" loading="lazy" onerror="this.src='img/placeholder.png'">
       <div class="card-body">
         <div class="product-category">${catName}</div>
@@ -345,15 +347,21 @@ function renderProductCard(product) {
           <div class="card-bottom-row">
             <span class="card-price">${formatCurrency(defaultPrice)}</span>
             <div class="qty-selector">
-              <button class="qty-btn" onclick="event.stopPropagation();changeQty(this, -1)">−</button>
+              <button class="qty-btn" ${!available ? 'disabled' : ''} onclick="event.stopPropagation();changeQty(this, -1)">−</button>
               <span class="qty-value">1</span>
-              <button class="qty-btn" onclick="event.stopPropagation();changeQty(this, 1)">+</button>
+              <button class="qty-btn" ${!available ? 'disabled' : ''} onclick="event.stopPropagation();changeQty(this, 1)">+</button>
             </div>
           </div>
-          <button class="btn-add-cart btn-order-full" onclick="event.stopPropagation();addToCartFromCard(this)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-            Tambah ke Keranjang
-          </button>
+          ${available
+            ? `<button class="btn-add-cart btn-order-full" onclick="event.stopPropagation();addToCartFromCard(this)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                Tambah ke Keranjang
+               </button>`
+            : `<button class="btn-sold-out btn-order-full" disabled>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                Stok Habis
+               </button>`
+          }
         </div>
       </div>
     </div>`;

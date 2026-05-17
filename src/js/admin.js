@@ -53,10 +53,12 @@ function renderAdminProducts() {
     return;
   }
   grid.innerHTML = products.map((p, idx) => {
-    const catName = cats.find(c => c.id === p.category)?.name || p.category;
+    const catName   = cats.find(c => c.id === p.category)?.name || p.category;
+    const available = p.available !== false; // default: tersedia
     return `
-      <div class="admin-product-card" data-id="${p.id}">
+      <div class="admin-product-card ${available ? '' : 'unavailable'}" data-id="${p.id}">
         <img src="${p.image}" alt="${p.name}" class="admin-product-img" onerror="this.src='img/placeholder.png'">
+        ${!available ? '<div class="admin-habis-badge">HABIS</div>' : ''}
         <div class="admin-product-info">
           <div class="admin-product-top">
             <div>
@@ -64,6 +66,9 @@ function renderAdminProducts() {
               ${p.badge ? `<span class="admin-badge-tag">${p.badge}</span>` : ''}
             </div>
             <div class="admin-product-actions">
+              <button class="admin-btn ${available ? 'admin-btn-avail' : 'admin-btn-sold'}" onclick="toggleAvailable('${p.id}', ${available})">
+                ${available ? '✓ Tersedia' : '✕ Habis'}
+              </button>
               <button class="admin-btn admin-btn-edit"   onclick="openEditModal('${p.id}')">Edit</button>
               <button class="admin-btn admin-btn-delete" onclick="deleteProduct('${p.id}')">Hapus</button>
             </div>
@@ -172,6 +177,24 @@ async function deleteProduct(id) {
   const { error } = await db.from('products').delete().eq('id', id);
   if (error) { showToast('Gagal hapus: ' + error.message, 'error'); return; }
   showToast('Produk dihapus!', 'success');
+  await refreshData();
+  renderAdminPanel();
+}
+
+async function toggleAvailable(id, currentlyAvailable) {
+  const newVal = !currentlyAvailable;
+  if (db) {
+    const { error } = await db.from('products').update({ available: newVal }).eq('id', id);
+    if (error) { showToast('Gagal update: ' + error.message, 'error'); return; }
+  } else {
+    // Fallback: update di _products (cache lokal)
+    if (_products) {
+      const p = _products.find(x => x.id === id);
+      if (p) p.available = newVal;
+    }
+  }
+  const label = newVal ? 'Tersedia' : 'Habis';
+  showToast(`Produk ditandai: ${label}`, newVal ? 'success' : 'warning');
   await refreshData();
   renderAdminPanel();
 }
