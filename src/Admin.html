@@ -88,34 +88,6 @@
     }
     .admin-header-actions { display: flex; gap: 0.75rem; align-items: center; }
 
-    /* THEME TOGGLE PILL */
-    .theme-toggle-pill {
-      display: flex; align-items: center; gap: 6px;
-      background: var(--bg-secondary, var(--border));
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 4px 8px;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.3s;
-      position: relative;
-    }
-    .theme-pill-icon { font-size: 0.8rem; line-height: 1; }
-    .theme-pill-thumb {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--surface);
-      box-shadow: 0 1px 6px rgba(0,0,0,0.25);
-      display: flex; align-items: center; justify-content: center;
-      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), background 0.3s;
-    }
-    .pill-sun  { display: block; color: #F59E0B; }
-    .pill-moon { display: none;  color: #818CF8; }
-    [data-theme="dark"] .theme-toggle-pill { background: #1e1b4b; border-color: #4338ca; }
-    [data-theme="dark"] .theme-pill-thumb  { background: #312e81; transform: translateX(2px); }
-    [data-theme="dark"] .pill-sun  { display: none; }
-    [data-theme="dark"] .pill-moon { display: block; }
-    [data-theme="light"] .theme-pill-thumb { transform: translateX(-2px); }
-
     /* STATS */
     .admin-stats {
       display: grid;
@@ -392,14 +364,11 @@
         </div>
         <div class="admin-header-actions">
           <a href="index.html" class="btn btn-outline btn-sm" target="_blank">Lihat Web</a>
-          <!-- Dark/Light Toggle Slider -->
-          <div class="theme-toggle-pill" onclick="adminToggleTheme()" id="theme-pill" title="Ganti tema">
-            <span class="theme-pill-icon">☀️</span>
-            <div class="theme-pill-thumb">
-              <svg class="pill-sun" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-              <svg class="pill-moon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          <div class="theme-switch" id="admin-theme-switch" onclick="adminToggleTheme()" title="Ganti tema">
+            <div class="theme-switch-thumb">
+              <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+              <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
             </div>
-            <span class="theme-pill-icon">🌙</span>
           </div>
           <button class="btn btn-sm" style="background:#FEE2E2;color:#DC2626;" onclick="adminLogout()">Keluar</button>
         </div>
@@ -588,10 +557,12 @@
     }
 
     function adminToggleTheme() {
-      const html = document.documentElement;
-      const cur  = html.getAttribute('data-theme') || 'light';
-      const next = cur === 'dark' ? 'light' : 'dark';
+      const html   = document.documentElement;
+      const sw     = document.getElementById('admin-theme-switch');
+      const cur    = html.getAttribute('data-theme') || 'light';
+      const next   = cur === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', next);
+      if (sw) sw.classList.toggle('dark', next === 'dark');
       localStorage.setItem('dcemilin_theme', next);
     }
 
@@ -599,6 +570,8 @@
     (function() {
       const saved = localStorage.getItem('dcemilin_theme') || 'light';
       document.documentElement.setAttribute('data-theme', saved);
+      const sw = document.getElementById('admin-theme-switch');
+      if (sw) sw.classList.toggle('dark', saved === 'dark');
     })();
 
     // Responsive cat layout
