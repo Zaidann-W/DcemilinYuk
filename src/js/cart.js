@@ -47,6 +47,15 @@ function clearCart() {
   renderCartItems();
 }
 
+function updateCartNote(key, note) {
+  const cart = getCart();
+  const item = cart.find(i => i.key === key);
+  if (!item) return;
+  item.note = note;
+  saveCart(cart);
+  // Tidak re-render supaya input tidak ter-reset saat mengetik
+}
+
 // ── Badge ─────────────────────────────────────────────────────
 function updateCartBadge() {
   const total = getCart().reduce((s, i) => s + i.qty, 0);
@@ -147,6 +156,10 @@ function renderCartItems() {
             <button onclick="removeFromCart('${item.key}')" style="width:26px;height:26px;border-radius:50%;background:#FEE2E2;color:#DC2626;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.78rem;" title="Hapus">✕</button>
           </div>
         </div>
+        <input type="text" placeholder="📝 Catatan: tanpa sambal, dll..." value="${item.note || ''}"
+          oninput="updateCartNote('${item.key}', this.value)"
+          style="margin-top:0.5rem;width:100%;padding:0.35rem 0.6rem;border:1px solid var(--border);border-radius:0.5rem;background:var(--bg);color:var(--text);font-size:0.78rem;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border)'">
       </div>
     </div>
   `).join('') + `</div>`;
@@ -198,7 +211,11 @@ function checkoutCart() {
   if (!cart.length) return;
   const total      = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const totalItems = cart.reduce((s, i) => s + i.qty, 0);
-  const lines      = cart.map(i => `• ${i.name}${i.variant ? ` (${i.variant})` : ''} \u00d7${i.qty} = ${formatCurrency(i.price * i.qty)}`).join('\n');
+  const lines      = cart.map(i => {
+    const vt   = i.variant ? ` (${i.variant})` : '';
+    const note = i.note   ? `\n   📝 _${i.note}_` : '';
+    return `• ${i.name}${vt} \u00d7${i.qty} = ${formatCurrency(i.price * i.qty)}${note}`;
+  }).join('\n');
   const msg = encodeURIComponent(
     `Halo DcemilinYuk! Saya mau pesan:\n\n${lines}\n\n` +
     `\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nTotal (${totalItems} item): *${formatCurrency(total)}*\n\n` +
