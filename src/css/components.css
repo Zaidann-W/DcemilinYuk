@@ -131,6 +131,31 @@
   font-size: 0.68rem; font-weight: 700; padding: 3px 8px;
   border-radius: var(--radius-full); letter-spacing: 0.05em; z-index: 2;
 }
+
+/* ===== AVAILABILITY TOGGLE SWITCH ===== */
+.avail-switch {
+  display: inline-flex; align-items: center; gap: 7px;
+  cursor: pointer; user-select: none;
+}
+.avail-switch input { display: none; }
+.avail-track {
+  position: relative; width: 42px; height: 24px;
+  background: #FECACA; border-radius: 999px;
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+  border: 2px solid rgba(0,0,0,0.06);
+}
+.avail-thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.avail-switch input:checked ~ .avail-track { background: #6EE7B7; border-color: rgba(0,0,0,0.06); }
+.avail-switch input:checked ~ .avail-track .avail-thumb { transform: translateX(18px); }
+.avail-label { font-size: 0.78rem; font-weight: 600; color: var(--text-secondary); }
+.avail-switch input:checked ~ .avail-label { color: #065F46; }
 .product-category { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
 .product-rating { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
 .product-rating .stars { color: var(--warning); font-size: 0.85rem; }

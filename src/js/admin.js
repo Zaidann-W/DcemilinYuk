@@ -66,9 +66,13 @@ function renderAdminProducts() {
               ${p.badge ? `<span class="admin-badge-tag">${p.badge}</span>` : ''}
             </div>
             <div class="admin-product-actions">
-              <button class="admin-btn ${available ? 'admin-btn-avail' : 'admin-btn-sold'}" onclick="toggleAvailable('${p.id}', ${available})">
-                ${available ? '✓ Tersedia' : '✕ Habis'}
-              </button>
+              <label class="avail-switch" title="${available ? 'Klik untuk tandai Habis' : 'Klik untuk tandai Tersedia'}">
+                <input type="checkbox" ${available ? 'checked' : ''} onchange="toggleAvailable('${p.id}', ${available})" onclick="event.stopPropagation()">
+                <span class="avail-track">
+                  <span class="avail-thumb"></span>
+                </span>
+                <span class="avail-label">${available ? 'Tersedia' : 'Habis'}</span>
+              </label>
               <button class="admin-btn admin-btn-edit"   onclick="openEditModal('${p.id}')">Edit</button>
               <button class="admin-btn admin-btn-delete" onclick="deleteProduct('${p.id}')">Hapus</button>
             </div>
