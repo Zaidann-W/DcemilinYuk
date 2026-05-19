@@ -68,8 +68,15 @@ const DEFAULT_CATEGORIES = [
   { id: 'hampers',    name: 'Hampers',           icon: 'fa-solid fa-gift',           description: 'Paket Spesial' }
 ];
 
-// Urutan tampil produk: minuman → snack → kue → bolen → makberat → hampers
-const CATEGORY_ORDER = ['esteh','popice','icecream','snack','bolen','kuedessert','makberat','hampers'];
+// Urutan tampil: Minuman → Snack & Gorengan → Bolen → Kue & Dessert → Makanan Berat → Hampers
+const CATEGORY_ORDER = [
+  'esteh', 'popice', 'icecream',   // Minuman
+  'snack',                          // Snack & Gorengan
+  'bolen',                          // Bolen
+  'kuedessert',                     // Kue & Dessert
+  'makberat',                       // Makanan Berat
+  'hampers'                         // Hampers
+];
 
 // Gunakan cache dari supabase.js (_products, _categories)
 // Fallback ke DEFAULT jika belum init
