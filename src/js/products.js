@@ -58,15 +58,18 @@ const DEFAULT_PRODUCTS = [
 ];
 
 const DEFAULT_CATEGORIES = [
-  { id: 'esteh',      name: 'Es Teh',           icon: 'fa-solid fa-mug-hot',       description: 'Segar & Nikmat' },
-  { id: 'popice',     name: 'Pop Ice',           icon: 'fa-solid fa-snowflake',     description: 'Dingin & Manis' },
-  { id: 'icecream',   name: 'Ice Cream',         icon: 'fa-solid fa-ice-cream',     description: 'Premium & Lezat' },
-  { id: 'bolen',      name: 'Bolen',             icon: 'fa-solid fa-bread-slice',   description: 'Renyah & Gurih' },
-  { id: 'makberat',   name: 'Makanan Berat',     icon: 'fa-solid fa-utensils',      description: 'Mengenyangkan' },
-  { id: 'kuedessert', name: 'Kue & Dessert',     icon: 'fa-solid fa-cake-candles',  description: 'Manis & Lezat' },
-  { id: 'snack',      name: 'Snack & Gorengan',  icon: 'fa-solid fa-drumstick-bite',description: 'Crispy & Nagih' },
-  { id: 'hampers',    name: 'Hampers',           icon: 'fa-solid fa-gift',          description: 'Paket Spesial' }
+  { id: 'esteh',      name: 'Es Teh',           icon: 'fa-solid fa-mug-hot',        description: 'Segar & Nikmat' },
+  { id: 'popice',     name: 'Pop Ice',           icon: 'fa-solid fa-snowflake',      description: 'Dingin & Manis' },
+  { id: 'icecream',   name: 'Ice Cream',         icon: 'fa-solid fa-ice-cream',      description: 'Premium & Lezat' },
+  { id: 'snack',      name: 'Snack & Gorengan',  icon: 'fa-solid fa-drumstick-bite', description: 'Crispy & Nagih' },
+  { id: 'bolen',      name: 'Bolen',             icon: 'fa-solid fa-bread-slice',    description: 'Renyah & Gurih' },
+  { id: 'kuedessert', name: 'Kue & Dessert',     icon: 'fa-solid fa-cake-candles',   description: 'Manis & Lezat' },
+  { id: 'makberat',   name: 'Makanan Berat',     icon: 'fa-solid fa-utensils',       description: 'Mengenyangkan' },
+  { id: 'hampers',    name: 'Hampers',           icon: 'fa-solid fa-gift',           description: 'Paket Spesial' }
 ];
+
+// Urutan tampil produk: minuman → snack → kue → bolen → makberat → hampers
+const CATEGORY_ORDER = ['esteh','popice','icecream','snack','bolen','kuedessert','makberat','hampers'];
 
 // Gunakan cache dari supabase.js (_products, _categories)
 // Fallback ke DEFAULT jika belum init
@@ -391,7 +394,15 @@ function renderProducts(container, products) {
     el.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><h3>Produk tidak ditemukan</h3><p>Coba kata kunci lain.</p></div>`;
     return;
   }
-  el.innerHTML = products.map(renderProductCard).join('');
+  // Sort produk sesuai urutan kategori
+  const sorted = [...products].sort((a, b) => {
+    const ai = CATEGORY_ORDER.indexOf(a.category);
+    const bi = CATEGORY_ORDER.indexOf(b.category);
+    const av = ai === -1 ? 999 : ai;
+    const bv = bi === -1 ? 999 : bi;
+    return av - bv;
+  });
+  el.innerHTML = sorted.map(renderProductCard).join('');
   if (typeof initScrollReveal === 'function') initScrollReveal();
 }
 
