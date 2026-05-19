@@ -394,15 +394,41 @@ function renderProducts(container, products) {
     el.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><h3>Produk tidak ditemukan</h3><p>Coba kata kunci lain.</p></div>`;
     return;
   }
-  // Sort produk sesuai urutan kategori
-  const sorted = [...products].sort((a, b) => {
-    const ai = CATEGORY_ORDER.indexOf(a.category);
-    const bi = CATEGORY_ORDER.indexOf(b.category);
-    const av = ai === -1 ? 999 : ai;
-    const bv = bi === -1 ? 999 : bi;
-    return av - bv;
+
+  const cats = getCategories();
+
+  // Kelompokkan produk per kategori sesuai CATEGORY_ORDER
+  const grouped = {};
+  CATEGORY_ORDER.forEach(catId => { grouped[catId] = []; });
+  products.forEach(p => {
+    if (grouped[p.category] !== undefined) {
+      grouped[p.category].push(p);
+    } else {
+      if (!grouped['__other']) grouped['__other'] = [];
+      grouped['__other'].push(p);
+    }
   });
-  el.innerHTML = sorted.map(renderProductCard).join('');
+
+  let html = '';
+  const renderOrder = [...CATEGORY_ORDER, '__other'];
+  renderOrder.forEach(catId => {
+    const items = grouped[catId];
+    if (!items || !items.length) return;
+    const cat = cats.find(c => c.id === catId);
+    const catName = cat ? cat.name : catId;
+    html += `
+      <div class="product-section reveal" style="margin-bottom:2.5rem;">
+        <div class="product-section-header">
+          <h3 class="product-section-title">${catName}</h3>
+          <span class="product-section-count">${items.length} produk</span>
+        </div>
+        <div class="products-grid">
+          ${items.map(renderProductCard).join('')}
+        </div>
+      </div>`;
+  });
+
+  el.innerHTML = html;
   if (typeof initScrollReveal === 'function') initScrollReveal();
 }
 

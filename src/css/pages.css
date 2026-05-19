@@ -23,6 +23,28 @@
 /* ===== PRODUCT GRID ===== */
 .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.5rem; }
 
+/* ===== PRODUCT SECTION (grouped by category) ===== */
+.product-section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1rem; padding-bottom: 0.625rem;
+  border-bottom: 2px solid var(--primary);
+}
+.product-section-title {
+  margin: 0; font-size: 1.1rem; font-weight: 700;
+  color: var(--text);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.product-section-title::before {
+  content: ''; display: inline-block;
+  width: 4px; height: 1.1rem; border-radius: 2px;
+  background: var(--primary);
+}
+.product-section-count {
+  font-size: 0.78rem; font-weight: 600; color: var(--primary);
+  background: var(--primary-light); padding: 2px 10px;
+  border-radius: 99px;
+}
+
 /* ===== CATEGORIES ===== */
 .categories-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
 .category-card { text-align: center; padding: 2rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); cursor: pointer; transition: var(--transition); }
