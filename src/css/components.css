@@ -295,6 +295,43 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
   .card { transition: box-shadow 0.15s ease; }
 }
 
+/* Mobile: kartu produk horizontal — gambar kiri, info kanan */
+@media (max-width: 768px) {
+  .product-card {
+    flex-direction: row !important;
+    align-items: stretch;
+  }
+  .product-card .card-img {
+    width: 130px !important;
+    min-width: 130px;
+    height: auto;
+    aspect-ratio: 1/1 !important;
+    border-radius: var(--radius-md) 0 0 var(--radius-md) !important;
+    object-fit: cover;
+  }
+  .product-card .card-body {
+    flex: 1;
+    padding: 0.75rem;
+    overflow: hidden;
+  }
+  .product-card .card-title { font-size: 0.9rem; margin-bottom: 0.25rem; }
+  .product-card .card-text  { font-size: 0.78rem; margin-bottom: 0.4rem;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .product-card .card-price { font-size: 1rem; }
+  .product-card .product-badge { top: 8px; left: 8px; font-size: 0.65rem; padding: 3px 7px; }
+  .product-card .badge-habis  { top: 8px; right: 8px; font-size: 0.65rem; padding: 3px 7px; }
+  .product-card .card-bottom-row { flex-direction: row; align-items: center; gap: 0; }
+  .product-card .qty-btn { width: 28px; height: 28px; font-size: 1rem; border-radius: var(--radius-sm); }
+  .product-card .qty-value { font-size: 0.85rem; min-width: 20px; }
+  .product-card .btn-order-full,
+  .product-card .btn-add-cart,
+  .product-card .btn-sold-out { font-size: 0.75rem; padding: 0.4rem 0.7rem; }
+  .product-card .product-rating { margin-bottom: 4px; }
+  .product-card .product-rating .count { display: none; }
+  .product-card .variant-selector { margin: 0.3rem 0; }
+  .product-card .variant-pill { font-size: 0.7rem; padding: 0.15rem 0.55rem; }
+}
+
 /* ===== PAYMENT OPTION HOVER ===== */
 .payment-option { display: flex; align-items: center; gap: 12px; padding: 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: var(--transition); }
 .payment-option:hover { border-color: var(--primary); background: var(--primary-light); transform: translateX(4px); }

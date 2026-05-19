@@ -290,8 +290,8 @@
   .section { padding: 3rem 0; }
   .section-header { margin-bottom: 2rem; }
 
-  /* Grids */
-  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.875rem; }
+  /* Grids — 1 kolom di mobile supaya kartu besar */
+  .products-grid { grid-template-columns: 1fr; gap: 0.875rem; }
   .categories-grid { grid-template-columns: repeat(2, 1fr); gap: 0.875rem; }
   .features-grid { grid-template-columns: 1fr; gap: 1rem; }
   .testimonials-grid { grid-template-columns: 1fr; }
@@ -355,8 +355,8 @@
   .hero-text { text-align: center; }
   .hero-text p { font-size: 1rem; }
 
-  /* Products — 2 kolom di HP (lebih kompak) */
-  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+  /* Products — 1 kolom di HP kecil, kartu full width */
+  .products-grid { grid-template-columns: 1fr; gap: 0.75rem; }
   .categories-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
 
   /* Section header di HP kecil */
