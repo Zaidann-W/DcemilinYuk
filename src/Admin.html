@@ -486,7 +486,10 @@
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div class="form-group">
-              <label class="form-label">Kategori *</label>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                <label class="form-label" style="margin-bottom:0;">Kategori *</label>
+                <a href="#" onclick="closeModal(); switchAdminTab('categories')" style="font-size:0.75rem; color:var(--primary); font-weight:600; text-decoration:none;">+ Kategori Baru</a>
+              </div>
               <select id="edit-product-category" class="form-input" required></select>
             </div>
             <div class="form-group">

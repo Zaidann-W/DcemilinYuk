@@ -58,6 +58,7 @@ const DEFAULT_PRODUCTS = [
 ];
 
 const DEFAULT_CATEGORIES = [
+  { id: 'minuman',    name: 'Minuman',           icon: 'fa-solid fa-glass-water',    description: 'Segar & Nikmat' },
   { id: 'esteh',      name: 'Es Teh',           icon: 'fa-solid fa-mug-hot',        description: 'Segar & Nikmat' },
   { id: 'popice',     name: 'Pop Ice',           icon: 'fa-solid fa-snowflake',      description: 'Dingin & Manis' },
   { id: 'icecream',   name: 'Ice Cream',         icon: 'fa-solid fa-ice-cream',      description: 'Premium & Lezat' },
@@ -404,25 +405,28 @@ function renderProducts(container, products) {
 
   const cats = getCategories();
 
-  // Kelompokkan produk per kategori sesuai CATEGORY_ORDER
+  // Kelompokkan produk berdasarkan kategori masing-masing
   const grouped = {};
-  CATEGORY_ORDER.forEach(catId => { grouped[catId] = []; });
   products.forEach(p => {
-    if (grouped[p.category] !== undefined) {
-      grouped[p.category].push(p);
-    } else {
-      if (!grouped['__other']) grouped['__other'] = [];
-      grouped['__other'].push(p);
-    }
+    if (!grouped[p.category]) grouped[p.category] = [];
+    grouped[p.category].push(p);
+  });
+
+  // Urutkan ID kategori yang ada berdasarkan CATEGORY_ORDER, yang tidak ada di order ditaruh di akhir
+  const renderOrder = Object.keys(grouped).sort((a, b) => {
+    const idxA = CATEGORY_ORDER.indexOf(a);
+    const idxB = CATEGORY_ORDER.indexOf(b);
+    const valA = idxA === -1 ? 999 : idxA;
+    const valB = idxB === -1 ? 999 : idxB;
+    return valA - valB;
   });
 
   let html = '';
-  const renderOrder = [...CATEGORY_ORDER, '__other'];
   renderOrder.forEach(catId => {
     const items = grouped[catId];
     if (!items || !items.length) return;
     const cat = cats.find(c => c.id === catId);
-    const catName = cat ? cat.name : (catId === '__other' ? 'Kategori Lainnya' : catId);
+    const catName = cat ? cat.name : catId;
     html += `
       <div class="product-section reveal" style="margin-bottom:2.5rem;">
         <div class="product-section-header">
