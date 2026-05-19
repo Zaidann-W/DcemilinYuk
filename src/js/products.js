@@ -70,7 +70,7 @@ const DEFAULT_CATEGORIES = [
 
 // Urutan tampil: Minuman → Snack & Gorengan → Bolen → Kue & Dessert → Makanan Berat → Hampers
 const CATEGORY_ORDER = [
-  'esteh', 'popice', 'icecream',   // Minuman
+  'minuman', 'esteh', 'popice', 'icecream',   // Minuman
   'snack',                          // Snack & Gorengan
   'bolen',                          // Bolen
   'kuedessert',                     // Kue & Dessert
@@ -422,7 +422,7 @@ function renderProducts(container, products) {
     const items = grouped[catId];
     if (!items || !items.length) return;
     const cat = cats.find(c => c.id === catId);
-    const catName = cat ? cat.name : catId;
+    const catName = cat ? cat.name : (catId === '__other' ? 'Kategori Lainnya' : catId);
     html += `
       <div class="product-section reveal" style="margin-bottom:2.5rem;">
         <div class="product-section-header">
