@@ -5,10 +5,18 @@ const WA_NUMBER = (typeof CONFIG !== 'undefined') ? CONFIG.WA_NUMBER : '62821844
 
 // Storage Keys
 const STORAGE = {
-  THEME: 'dcemilin_theme',
-  PRODUCTS: 'dcemilin_products',
-  CATEGORIES: 'dcemilin_categories'
+  THEME:     'dcemilin_theme',
+  PRODUCTS:  'dcemilin_products',
+  CATEGORIES:'dcemilin_categories',
+  USER:      'dcemilin_user',
+  USERS_DB:  'dcemilin_users_db'
 };
+
+// ===== AUTH HELPERS =====
+function getCurrentUser() {
+  try { return JSON.parse(localStorage.getItem(STORAGE.USER)); } catch { return null; }
+}
+function isLoggedIn() { return !!getCurrentUser(); }
 
 // Utility Functions
 const $ = (sel) => document.querySelector(sel);
@@ -110,10 +118,13 @@ function renderNavbar() {
     return `<a href="${href}" class="${isActive}">${label}</a>`;
   };
 
+  const user = getCurrentUser();
+
   container.innerHTML = `
     <nav class="navbar" id="main-navbar">
       <div class="container">
         <a href="index.html" class="navbar-brand">
+          <span class="brand-emoji">🍰</span>
           <span>${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_NAME : 'DcemilinYuk'}</span>
         </a>
         <div class="nav-links">
@@ -137,6 +148,10 @@ function renderNavbar() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
             <span class="cart-badge" style="display:none;background:#EF4444;color:#fff;border-radius:99px;font-size:0.65rem;font-weight:700;min-width:18px;height:18px;align-items:center;justify-content:center;"></span>
           </button>
+          ${user
+            ? `<a href="Profile.html" class="nav-user-btn">👤 ${user.name ? user.name.split(' ')[0] : 'Profil'}</a>`
+            : `<a href="Login.html" class="nav-user-btn">Masuk</a>`
+          }
           <div class="mobile-toggle" onclick="toggleMobileMenu()">
             <span></span><span></span><span></span>
           </div>
@@ -148,6 +163,10 @@ function renderNavbar() {
       <a href="Product.html">Produk</a>
       <a href="About.html">Tentang</a>
       <a href="Contact.html">Kontak</a>
+      ${user
+        ? `<a href="Profile.html" style="color:var(--primary);font-weight:600;">👤 ${user.name ? user.name.split(' ')[0] : 'Profil'}</a>`
+        : `<a href="Login.html" style="color:var(--primary);font-weight:600;">🔑 Masuk / Daftar</a>`
+      }
       <a href="#" onclick="openWhatsAppGeneral();return false;" style="color:#25D366;font-weight:600;">Hubungi via WhatsApp</a>
     </div>
   `;
@@ -162,17 +181,19 @@ function toggleMobileMenu() {
 function renderFooter() {
   const container = $('#footer-container');
   if (!container) return;
+  const wa = (typeof CONFIG !== 'undefined') ? CONFIG.WA_NUMBER : WA_NUMBER;
+  const ig = (typeof CONFIG !== 'undefined' && CONFIG.INSTAGRAM) ? CONFIG.INSTAGRAM.replace('@','') : '';
   container.innerHTML = `
     <footer class="footer">
       <div class="container">
         <div class="footer-grid">
           <div>
-            <div class="footer-brand">${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_NAME : 'DcemilinYuk'}</div>
+            <div class="footer-brand">🍰 ${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_NAME : 'DcemilinYuk'}</div>
             <p class="footer-desc">${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_DESC_SHORT : 'Katalog cemilan dan minuman terbaik dari pedagang kecil lokal.'}</p>
-            <button class="btn btn-wa" onclick="openWhatsAppGeneral()" style="margin-top:1rem;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.558 4.116 1.535 5.845L.057 23.997l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.956 0-3.783-.574-5.318-1.562l-.38-.23-3.742.981.998-3.648-.248-.396A9.962 9.962 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
-              Chat WhatsApp
-            </button>
+            <div class="footer-social">
+              <a href="https://wa.me/${wa}" target="_blank" class="footer-social-btn" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+              ${ig ? `<a href="https://instagram.com/${ig}" target="_blank" class="footer-social-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>` : ''}
+            </div>
           </div>
           <div>
             <h4>Menu</h4>
@@ -192,14 +213,14 @@ function renderFooter() {
           <div>
             <h4>Kontak</h4>
             <div class="footer-links">
-              <a href="https://wa.me/${WA_NUMBER}" target="_blank"><i class="fa-brands fa-whatsapp"></i> WhatsApp Kami</a>
-              ${(typeof CONFIG !== 'undefined' && CONFIG.INSTAGRAM) ? `<a href="https://instagram.com/${CONFIG.INSTAGRAM.replace('@','')}" target="_blank"><i class="fa-brands fa-instagram"></i> ${CONFIG.INSTAGRAM}</a>` : ''}
+              <a href="https://wa.me/${wa}" target="_blank"><i class="fa-brands fa-whatsapp"></i> WhatsApp Kami</a>
+              ${ig ? `<a href="https://instagram.com/${ig}" target="_blank"><i class="fa-brands fa-instagram"></i> ${(typeof CONFIG !== 'undefined') ? CONFIG.INSTAGRAM : '@dcemilin_yuk'}</a>` : ''}
               <a href="Contact.html"><i class="fa-solid fa-address-card"></i> Hubungi Kami</a>
             </div>
           </div>
         </div>
         <div class="footer-bottom">
-          <p>&copy; ${(typeof CONFIG !== 'undefined') ? CONFIG.COPYRIGHT_YEAR : new Date().getFullYear()} ${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_NAME : 'DcemilinYuk'}. Semua hak dilindungi.</p>
+          <p>&copy; ${(typeof CONFIG !== 'undefined') ? CONFIG.COPYRIGHT_YEAR : new Date().getFullYear()} ${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_NAME : 'DcemilinYuk'} — Dibuat dengan ❤️ untuk pedagang lokal Indonesia.</p>
         </div>
       </div>
     </footer>
