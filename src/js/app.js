@@ -7,16 +7,8 @@ const WA_NUMBER = (typeof CONFIG !== 'undefined') ? CONFIG.WA_NUMBER : '62821844
 const STORAGE = {
   THEME:     'dcemilin_theme',
   PRODUCTS:  'dcemilin_products',
-  CATEGORIES:'dcemilin_categories',
-  USER:      'dcemilin_user',
-  USERS_DB:  'dcemilin_users_db'
+  CATEGORIES:'dcemilin_categories'
 };
-
-// ===== AUTH HELPERS =====
-function getCurrentUser() {
-  try { return JSON.parse(localStorage.getItem(STORAGE.USER)); } catch { return null; }
-}
-function isLoggedIn() { return !!getCurrentUser(); }
 
 // Utility Functions
 const $ = (sel) => document.querySelector(sel);
@@ -118,8 +110,6 @@ function renderNavbar() {
     return `<a href="${href}" class="${isActive}">${label}</a>`;
   };
 
-  const user = getCurrentUser();
-
   container.innerHTML = `
     <nav class="navbar" id="main-navbar">
       <div class="container">
@@ -148,10 +138,6 @@ function renderNavbar() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
             <span class="cart-badge" style="display:none;background:#EF4444;color:#fff;border-radius:99px;font-size:0.65rem;font-weight:700;min-width:18px;height:18px;align-items:center;justify-content:center;"></span>
           </button>
-          ${user
-            ? `<a href="Profile.html" class="nav-user-btn">👤 ${user.name ? user.name.split(' ')[0] : 'Profil'}</a>`
-            : `<a href="Login.html" class="nav-user-btn">Masuk</a>`
-          }
           <div class="mobile-toggle" onclick="toggleMobileMenu()">
             <span></span><span></span><span></span>
           </div>
@@ -163,10 +149,6 @@ function renderNavbar() {
       <a href="Product.html">Produk</a>
       <a href="About.html">Tentang</a>
       <a href="Contact.html">Kontak</a>
-      ${user
-        ? `<a href="Profile.html" style="color:var(--primary);font-weight:600;">👤 ${user.name ? user.name.split(' ')[0] : 'Profil'}</a>`
-        : `<a href="Login.html" style="color:var(--primary);font-weight:600;">🔑 Masuk / Daftar</a>`
-      }
       <a href="#" onclick="openWhatsAppGeneral();return false;" style="color:#25D366;font-weight:600;">Hubungi via WhatsApp</a>
     </div>
   `;
