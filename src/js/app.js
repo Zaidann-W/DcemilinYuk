@@ -114,7 +114,6 @@ function renderNavbar() {
     <nav class="navbar" id="main-navbar">
       <div class="container">
         <a href="index.html" class="navbar-brand">
-          <span class="brand-emoji">🍰</span>
           <span>${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_NAME : 'DcemilinYuk'}</span>
         </a>
         <div class="nav-links">
@@ -170,7 +169,7 @@ function renderFooter() {
       <div class="container">
         <div class="footer-grid">
           <div>
-            <div class="footer-brand">🍰 ${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_NAME : 'DcemilinYuk'}</div>
+            <div class="footer-brand">${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_NAME : 'DcemilinYuk'}</div>
             <p class="footer-desc">${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_DESC_SHORT : 'Katalog cemilan dan minuman terbaik dari pedagang kecil lokal.'}</p>
             <div class="footer-social">
               <a href="https://wa.me/${wa}" target="_blank" class="footer-social-btn" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -202,7 +201,7 @@ function renderFooter() {
           </div>
         </div>
         <div class="footer-bottom">
-          <p>&copy; ${(typeof CONFIG !== 'undefined') ? CONFIG.COPYRIGHT_YEAR : new Date().getFullYear()} ${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_NAME : 'DcemilinYuk'} — Dibuat dengan ❤️ untuk pedagang lokal Indonesia.</p>
+          <p>&copy; ${(typeof CONFIG !== 'undefined') ? CONFIG.COPYRIGHT_YEAR : new Date().getFullYear()} ${(typeof CONFIG !== 'undefined') ? CONFIG.STORE_NAME : 'DcemilinYuk'} &mdash; Dibuat untuk pedagang lokal Indonesia.</p>
         </div>
       </div>
     </footer>

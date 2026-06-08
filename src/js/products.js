@@ -124,7 +124,7 @@ function orderProductCard(btn) {
     `Harga satuan: ${formatCurrency(price)}\n` +
     `Jumlah: ${qty} porsi\n` +
     `Total: *${formatCurrency(total)}*\n\n` +
-    `Mohon konfirmasi ketersediaan ya! Terima kasih 🙏`
+    `Mohon konfirmasi ketersediaan ya! Terima kasih`
   );
   window.open(`https://wa.me/${WA_NUMBER}?text=${message}`, '_blank');
 }
@@ -298,7 +298,7 @@ function pdOrder() {
     `Harga satuan: ${formatCurrency(price)}\n` +
     `Jumlah: ${qty} porsi\n` +
     `Total: *${formatCurrency(total)}*\n\n` +
-    `Mohon konfirmasi ketersediaan ya! Terima kasih 🙏`
+    `Mohon konfirmasi ketersediaan ya! Terima kasih`
   );
   window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
 }
@@ -399,7 +399,7 @@ function renderProducts(container, products) {
   const el = typeof container === 'string' ? $(container) : container;
   if (!el) return;
   if (!products.length) {
-    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><h3>Produk tidak ditemukan</h3><p>Coba kata kunci lain.</p></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon"></div><h3>Produk tidak ditemukan</h3><p>Coba kata kunci lain.</p></div>`;
     return;
   }
 
