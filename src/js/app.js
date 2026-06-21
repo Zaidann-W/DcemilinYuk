@@ -30,6 +30,13 @@ function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
+// Gambar base64 yang tersimpan di Supabase (legacy) bisa truncated & tidak trigger onerror
+// → kembalikan placeholder supaya tidak blank
+function safeImgSrc(src) {
+  if (!src || src.startsWith('data:')) return 'img/placeholder.png';
+  return src;
+}
+
 // Get current page name
 function getCurrentPage() {
   const path = window.location.pathname;
