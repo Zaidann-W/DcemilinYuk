@@ -54,10 +54,19 @@ function renderAdminProducts() {
   }
   grid.innerHTML = products.map((p, idx) => {
     const catName   = cats.find(c => c.id === p.category)?.name || p.category;
-    const available = p.available !== false; // default: tersedia
+    const available = p.available !== false;
+    const hasValidImg = p.image && !p.image.startsWith('data:');
     return `
       <div class="admin-product-card ${available ? '' : 'unavailable'}" data-id="${p.id}">
-        <img src="${safeImgSrc(p.image)}" alt="${p.name}" class="admin-product-img" onerror="handleImgError(this)">
+        <div style="position:relative;">
+          <img src="${safeImgSrc(p.image)}" alt="${p.name}" class="admin-product-img" onerror="handleImgError(this)">
+          ${!hasValidImg ? `
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);border-radius:0;">
+              <button type="button" onclick="quickReplacePhoto('${p.id}')" style="background:var(--primary);color:#fff;border:none;border-radius:var(--radius);padding:0.4rem 0.85rem;font-size:0.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
+                <i class="fa-solid fa-camera"></i> Ganti Foto
+              </button>
+            </div>` : ''}
+        </div>
         ${!available ? '<div class="admin-habis-badge">HABIS</div>' : ''}
         <div class="admin-product-info">
           <div class="admin-product-top">
@@ -291,6 +300,62 @@ function previewImage(inputId, previewId) {
   testImg.onload  = () => { preview.src = url; preview.style.display = 'block'; };
   testImg.onerror = () => { preview.style.display = 'none'; };
   testImg.src = url;
+}
+
+// ===== QUICK REPLACE PHOTO (tanpa buka edit modal) =====
+function quickReplacePhoto(productId) {
+  const input = document.createElement('input');
+  input.type   = 'file';
+  input.accept = 'image/*';
+  input.style.display = 'none';
+  document.body.appendChild(input);
+
+  input.onchange = async () => {
+    const file = input.files[0];
+    document.body.removeChild(input);
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) { showToast('File harus berupa gambar!', 'error'); return; }
+    if (file.size > 3 * 1024 * 1024)     { showToast('Foto terlalu besar! Maks 3MB.', 'error'); return; }
+    if (!db) { showToast('Supabase belum terhubung!', 'error'); return; }
+
+    showToast('Mengupload foto...', 'info');
+
+    try {
+      const ext      = file.name.split('.').pop().toLowerCase();
+      const fileName = `product_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+      const BUCKET   = 'product-images';
+
+      const { error: uploadErr } = await db.storage
+        .from(BUCKET)
+        .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+      if (uploadErr) {
+        if (uploadErr.message.includes('Bucket not found') || uploadErr.statusCode === 404) {
+          showToast('Buat bucket "product-images" dulu di Supabase Dashboard → Storage → New Bucket (Public)!', 'error');
+        } else {
+          showToast('Gagal upload: ' + uploadErr.message, 'error');
+        }
+        return;
+      }
+
+      const { data: urlData } = db.storage.from(BUCKET).getPublicUrl(fileName);
+      const publicUrl = urlData.publicUrl;
+
+      // Update langsung ke Supabase
+      const { error: updateErr } = await db.from('products').update({ image: publicUrl }).eq('id', productId);
+      if (updateErr) { showToast('Foto terupload tapi gagal simpan: ' + updateErr.message, 'error'); return; }
+
+      showToast('Foto berhasil diganti!', 'success');
+      await refreshData();
+      renderAdminPanel();
+
+    } catch (err) {
+      showToast('Error: ' + err.message, 'error');
+    }
+  };
+
+  input.click();
 }
 
 function filterAdminProducts() {
