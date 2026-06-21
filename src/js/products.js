@@ -224,10 +224,10 @@ function showProductModal(productId) {
   // Langsung fallback ke placeholder agar modal tidak blank
   const imgSrc = prod.image || '';
   if (!imgSrc || imgSrc.startsWith('data:')) {
-    img.src = 'img/placeholder.png';
+    img.src = PLACEHOLDER_IMG;
   } else {
     img.src = imgSrc;
-    img.onerror = () => { img.src = 'img/placeholder.png'; };
+    img.onerror = () => handleImgError(img);
   }
   document.getElementById('pd-cat').textContent   = catName;
   document.getElementById('pd-name').textContent  = prod.name;
@@ -354,7 +354,7 @@ function renderProductCard(product) {
     <div class="card product-card reveal${available ? '' : ' sold-out'}" data-id="${product.id}" data-current-price="${defaultPrice}" data-current-variant="${defaultVariant}" onclick="showProductModal('${product.id}')" style="cursor:pointer;">
       ${product.badge ? `<span class="product-badge ${badgeClass}">${product.badge}</span>` : ''}
       ${!available ? '<span class="badge-habis">HABIS</span>' : ''}
-      <img src="${safeImgSrc(product.image)}" alt="${product.name}" class="card-img" loading="lazy" onerror="this.src='img/placeholder.png'">
+      <img src="${safeImgSrc(product.image)}" alt="${product.name}" class="card-img" loading="lazy" onerror="handleImgError(this)">
       <div class="card-body">
         <div class="product-category">${catName}</div>
         <h4 class="card-title">${product.name}</h4>

@@ -30,11 +30,19 @@ function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
-// Gambar base64 yang tersimpan di Supabase (legacy) bisa truncated & tidak trigger onerror
-// → kembalikan placeholder supaya tidak blank
+// Placeholder inline SVG — tidak butuh file eksternal
+const PLACEHOLDER_IMG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23F3F4F6'/%3E%3Cg fill='%23D1D5DB'%3E%3Crect x='150' y='95' width='100' height='75' rx='6'/%3E%3Ccircle cx='170' cy='115' r='10'/%3E%3Cpolygon points='150,170 185,130 210,155 240,120 250,170'/%3E%3C/g%3E%3Ctext x='50%25' y='88%25' font-family='sans-serif' font-size='13' fill='%239CA3AF' text-anchor='middle'%3ETidak ada foto%3C/text%3E%3C/svg%3E";
+
+// Cegah gambar blank: base64 lama / null → ganti inline placeholder
 function safeImgSrc(src) {
-  if (!src || src.startsWith('data:')) return 'img/placeholder.png';
+  if (!src || src.startsWith('data:')) return PLACEHOLDER_IMG;
   return src;
+}
+
+// onerror handler — cegah infinite loop
+function handleImgError(img) {
+  img.onerror = null;
+  img.src = PLACEHOLDER_IMG;
 }
 
 // Get current page name

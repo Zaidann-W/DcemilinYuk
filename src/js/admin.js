@@ -57,7 +57,7 @@ function renderAdminProducts() {
     const available = p.available !== false; // default: tersedia
     return `
       <div class="admin-product-card ${available ? '' : 'unavailable'}" data-id="${p.id}">
-        <img src="${safeImgSrc(p.image)}" alt="${p.name}" class="admin-product-img" onerror="this.src='img/placeholder.png'">
+        <img src="${safeImgSrc(p.image)}" alt="${p.name}" class="admin-product-img" onerror="handleImgError(this)">
         ${!available ? '<div class="admin-habis-badge">HABIS</div>' : ''}
         <div class="admin-product-info">
           <div class="admin-product-top">
