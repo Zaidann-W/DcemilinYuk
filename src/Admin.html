@@ -458,10 +458,20 @@
           <ul style="color:var(--text-secondary);font-size:0.9rem;line-height:2;padding-left:1.25rem;">
             <li>Pergi ke tab <strong>Produk</strong> untuk tambah, edit, atau hapus produk</li>
             <li>Pergi ke tab <strong>Kategori</strong> untuk membuat kategori baru</li>
-            <li>Untuk foto produk, upload dulu ke <a href="https://imgbb.com" target="_blank">imgbb.com</a> (gratis), lalu copy-paste link fotonya</li>
+            <li>Untuk upload foto produk, klik tombol <strong>"Pilih Foto"</strong> di form produk</li>
             <li>Semua perubahan langsung tampil di website pengunjung</li>
             <li>Untuk akses admin lagi, buka <strong>/Admin.html</strong> di browser</li>
           </ul>
+          <div style="margin-top:1.25rem;padding:1rem;background:var(--primary-light);border:1px solid rgba(249,115,22,0.2);border-radius:var(--radius-md);">
+            <strong style="color:var(--primary);font-size:0.9rem;">Perlu dilakukan sekali (setup foto):</strong>
+            <ol style="color:var(--text-secondary);font-size:0.85rem;line-height:1.9;padding-left:1.25rem;margin-top:0.5rem;">
+              <li>Buka <a href="https://supabase.com/dashboard" target="_blank" style="color:var(--primary);">Supabase Dashboard</a></li>
+              <li>Pilih project &rarr; <strong>Storage</strong> di sidebar</li>
+              <li>Klik <strong>New bucket</strong>, beri nama <code style="background:var(--bg-secondary);padding:1px 5px;border-radius:4px;">product-images</code></li>
+              <li>Centang <strong>Public bucket</strong> &rarr; Save</li>
+              <li>Selesai! Sekarang tombol "Pilih Foto" akan bekerja</li>
+            </ol>
+          </div>
         </div>
       </div>
 
@@ -596,28 +606,71 @@
     window.addEventListener('resize', adjustCatLayout);
     adjustCatLayout();
 
-    // ===== FILE PICKER =====
-    function handleFilePick(input) {
+    // ===== FILE PICKER — Upload ke Supabase Storage =====
+    async function handleFilePick(input) {
       const file = input.files[0];
       if (!file) return;
-      // Cek ukuran (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        showToast('Foto terlalu besar! Maksimal 2MB.', 'error');
+
+      // Validasi tipe
+      if (!file.type.startsWith('image/')) {
+        showToast('File harus berupa gambar!', 'error');
+        input.value = '';
         return;
       }
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target.result;
-        document.getElementById('edit-product-image').value = dataUrl;
-        // Langsung tampilkan preview
+      // Validasi ukuran (max 3MB)
+      if (file.size > 3 * 1024 * 1024) {
+        showToast('Foto terlalu besar! Maksimal 3MB.', 'error');
+        input.value = '';
+        return;
+      }
+      if (!db) {
+        showToast('Supabase belum terhubung!', 'error');
+        return;
+      }
+
+      // Tampilkan loading
+      const pickBtn = document.querySelector('button[onclick="document.getElementById(\'file-picker\').click()"]');
+      const originalBtnHtml = pickBtn ? pickBtn.innerHTML : '';
+      if (pickBtn) { pickBtn.disabled = true; pickBtn.innerHTML = 'Mengupload...'; }
+      showToast('Mengupload foto ke server...', 'info');
+
+      try {
+        const ext      = file.name.split('.').pop().toLowerCase();
+        const fileName = `product_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+        const BUCKET   = 'product-images';
+
+        // Upload ke Supabase Storage
+        const { error: uploadErr } = await db.storage
+          .from(BUCKET)
+          .upload(fileName, file, { cacheControl: '3600', upsert: false });
+
+        if (uploadErr) {
+          // Bucket belum dibuat atau RLS error
+          if (uploadErr.message.includes('Bucket not found') || uploadErr.statusCode === 404) {
+            showToast('Bucket belum ada! Buat bucket "product-images" di Supabase Dashboard → Storage → New Bucket (set Public).', 'error');
+          } else {
+            showToast('Gagal upload: ' + uploadErr.message, 'error');
+          }
+          return;
+        }
+
+        // Ambil public URL
+        const { data: urlData } = db.storage.from(BUCKET).getPublicUrl(fileName);
+        const publicUrl = urlData.publicUrl;
+
+        // Simpan URL ke input dan tampilkan preview
+        document.getElementById('edit-product-image').value = publicUrl;
         const preview = document.getElementById('image-preview');
-        preview.src = dataUrl;
+        preview.src   = publicUrl;
         preview.style.display = 'block';
-        showToast('Foto berhasil dipilih!', 'success');
-      };
-      reader.readAsDataURL(file);
-      // Reset input biar bisa pilih file yang sama lagi
-      input.value = '';
+        showToast('Foto berhasil diupload!', 'success');
+
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      } finally {
+        if (pickBtn) { pickBtn.disabled = false; pickBtn.innerHTML = originalBtnHtml; }
+        input.value = '';
+      }
     }
   </script>
 </body>
