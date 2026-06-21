@@ -217,8 +217,18 @@ function showProductModal(productId) {
   overlay.dataset.currentVariant = defVariant;
 
   const img = document.getElementById('pd-img');
-  img.src = prod.image;
-  img.onerror = () => { img.src = 'img/placeholder.png'; };
+  // Reset dulu, kasih background loading
+  img.src = '';
+  img.style.background = 'var(--bg-secondary)';
+  // Base64 data URL yang tersimpan di DB (legacy) sering truncated & tidak trigger onerror
+  // Langsung fallback ke placeholder agar modal tidak blank
+  const imgSrc = prod.image || '';
+  if (!imgSrc || imgSrc.startsWith('data:')) {
+    img.src = 'img/placeholder.png';
+  } else {
+    img.src = imgSrc;
+    img.onerror = () => { img.src = 'img/placeholder.png'; };
+  }
   document.getElementById('pd-cat').textContent   = catName;
   document.getElementById('pd-name').textContent  = prod.name;
   document.getElementById('pd-desc').textContent  = prod.description;
